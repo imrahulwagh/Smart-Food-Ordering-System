@@ -1,0 +1,313 @@
+<!-- ================= HEADER ================= -->
+
+<header class="menu-header">
+
+  <div class="logo">
+    🍔 <span>Foodie</span>
+  </div>
+
+  <nav>
+    <a routerLink="/home">Home</a>
+    <a class="active">Menu</a>
+    <a href="#">Orders</a>
+  </nav>
+
+  <div class="header-actions">
+
+    <button class="icon-btn" type="button">
+      <i class="bi bi-search"></i>
+    </button>
+
+    <button class="cart-btn" type="button">
+      <i class="bi bi-cart3"></i>
+      <span>Cart</span>
+    </button>
+
+    <button
+      class="login-btn"
+      routerLink="/login"
+      type="button">
+      Login
+    </button>
+
+  </div>
+
+</header>
+
+
+<!-- ================= HERO ================= -->
+
+<section class="menu-hero">
+
+  <div class="hero-content">
+
+    <p class="small-title">
+      FOODIE MENU
+    </p>
+
+    <h1>
+      What are you<br>
+      craving today?
+    </h1>
+
+    <p class="hero-description">
+      Discover delicious meals from the best restaurants
+      around you.
+    </p>
+
+    <!-- SEARCH -->
+
+    <div class="search-box">
+
+      <i class="bi bi-search"></i>
+
+      <input
+        type="text"
+        [(ngModel)]="searchText"
+        (input)="searchFood()"
+        placeholder="Search for food, restaurant...">
+
+      <button
+        type="button"
+        (click)="searchFood()">
+        Search
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ================= CATEGORIES ================= -->
+
+<section class="categories-section">
+
+  <div class="section-heading">
+
+    <div>
+
+      <p class="section-label">
+        EXPLORE
+      </p>
+
+      <h2>
+        Food Categories
+      </h2>
+
+    </div>
+
+  </div>
+
+
+  <div class="category-list">
+
+    <!-- ALL -->
+
+    <button
+      class="category-btn"
+      [class.selected]="selectedCategory === null"
+      (click)="selectCategory(null)"
+      type="button">
+
+      <span>🍽️</span>
+
+      All
+
+    </button>
+
+
+    <!-- LOADING -->
+
+    @if (loadingCategories) {
+
+      <span class="loading-text">
+        Loading categories...
+      </span>
+
+    }
+
+
+    <!-- DATABASE CATEGORIES -->
+
+    @for (
+      category of categories;
+      track category.id
+    ) {
+
+      <button
+        class="category-btn"
+        [class.selected]="selectedCategory === category"
+        (click)="selectCategory(category)"
+        type="button">
+
+        <span>
+          {{ getCategoryIcon(category.image) }}
+        </span>
+
+        {{ category.name }}
+
+      </button>
+
+    }
+
+  </div>
+
+</section>
+
+
+<!-- ================= FOOD SECTION ================= -->
+
+<section class="food-section">
+
+  <!-- SECTION HEADER -->
+
+  <div class="section-top">
+
+    <div>
+
+      <p class="section-label">
+        OUR SPECIALS
+      </p>
+
+      <h2>
+        Popular Food
+      </h2>
+
+    </div>
+
+    <span class="food-count">
+      {{ getFoodCount() }} items
+    </span>
+
+  </div>
+
+
+  <!-- LOADING -->
+
+  @if (loadingFoods) {
+
+    <div class="loading-foods">
+
+      <p>
+        Loading food items...
+      </p>
+
+    </div>
+
+  }
+
+
+  <!-- FOOD GRID -->
+
+  @if (!loadingFoods) {
+
+    <div class="food-grid">
+
+      @for (
+        food of filteredFoods;
+        track food.id
+      ) {
+
+        <div class="food-card">
+
+          <!-- IMAGE -->
+
+          <div class="food-image">
+
+            <img
+              [src]="food.image"
+              [alt]="food.name">
+
+          </div>
+
+
+          <!-- FOOD INFORMATION -->
+
+          <div class="food-info">
+
+            <div class="food-title">
+
+              <h3>
+                {{ food.name }}
+              </h3>
+
+              <span class="price">
+                ₹{{ food.price }}
+              </span>
+
+            </div>
+
+
+            <p>
+              {{ food.description }}
+            </p>
+
+
+            <!-- CARD BOTTOM -->
+
+            <div class="card-bottom">
+
+              @if (food.s_available) {
+
+                <span class="veg-status">
+                  ● Available
+                </span>
+
+              }
+              @else {
+
+                <span class="veg-status nonveg">
+                  ● Not Available
+                </span>
+
+              }
+
+
+              <button
+  class="add-btn"
+  type="button"
+  (click)="addToCart(food)">
+
+  <i class="bi bi-plus"></i>
+
+  Add
+
+</button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      }
+
+    </div>
+
+  }
+
+
+  <!-- NO FOOD -->
+
+  @if (
+    !loadingFoods &&
+    filteredFoods.length === 0
+  ) {
+
+    <div class="no-food">
+
+      <h3>
+        No food items found
+      </h3>
+
+      <p>
+        Try another category or search.
+      </p>
+
+    </div>
+
+  }
+
+</section>

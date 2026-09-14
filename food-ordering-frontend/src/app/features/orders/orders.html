@@ -1,0 +1,584 @@
+<div class="orders-page">
+
+  <!-- =====================================================
+       HEADER
+  ====================================================== -->
+
+  <div class="orders-header">
+
+    <div>
+      <p class="section-label">
+        FOODIE
+      </p>
+
+      <h1>
+        My Orders
+      </h1>
+
+      <p class="subtitle">
+        View your previous orders and order details.
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="continue-btn"
+      (click)="continueShopping()">
+
+      <i class="bi bi-arrow-left"></i>
+
+      Continue Shopping
+
+    </button>
+
+  </div>
+
+
+  <!-- =====================================================
+       MESSAGE
+  ====================================================== -->
+
+  <div
+    *ngIf="message"
+    class="message-box"
+    [ngClass]="
+      messageType === 'success'
+        ? 'message-success'
+        : 'message-error'
+    ">
+
+    <i
+      [class]="
+        messageType === 'success'
+          ? 'bi bi-check-circle'
+          : 'bi bi-exclamation-circle'
+      ">
+    </i>
+
+    {{ message }}
+
+  </div>
+
+
+  <!-- =====================================================
+       LOADING
+  ====================================================== -->
+
+  <div
+    *ngIf="loadingOrders"
+    class="loading-box">
+
+    <div class="spinner"></div>
+
+    <p>
+      Loading your orders...
+    </p>
+
+  </div>
+
+
+  <!-- =====================================================
+       NO ORDERS
+  ====================================================== -->
+
+  <div
+    *ngIf="
+      !loadingOrders &&
+      orders.length === 0
+    "
+    class="empty-orders">
+
+    <div class="empty-icon">
+      <i class="bi bi-bag-x"></i>
+    </div>
+
+    <h2>
+      No Orders Yet
+    </h2>
+
+    <p>
+      You haven't placed any orders yet.
+    </p>
+
+    <button
+      type="button"
+      class="primary-btn"
+      (click)="continueShopping()">
+
+      Start Ordering
+
+      <i class="bi bi-arrow-right"></i>
+
+    </button>
+
+  </div>
+
+
+  <!-- =====================================================
+       ORDERS LIST
+  ====================================================== -->
+
+  <div
+    *ngIf="
+      !loadingOrders &&
+      orders.length > 0
+    "
+    class="orders-list">
+
+
+    <!-- ===================================================
+         SINGLE ORDER
+    ==================================================== -->
+
+    <div
+      class="order-card"
+      *ngFor="let order of orders">
+
+
+      <!-- ORDER TOP -->
+
+      <div class="order-top">
+
+        <div>
+
+          <p class="order-label">
+            ORDER
+          </p>
+
+          <h2>
+            #{{ order.id }}
+          </h2>
+
+        </div>
+
+
+        <!-- STATUS -->
+
+        <span
+          class="order-status"
+          [ngClass]="
+            getStatusClass(
+              order.order_status || order.status
+            )
+          ">
+
+          {{ order.order_status || order.status || 'Pending' }}
+
+        </span>
+
+      </div>
+
+
+      <hr>
+
+
+      <!-- =================================================
+           ORDER INFORMATION
+      ================================================== -->
+
+      <div class="order-info">
+
+
+        <!-- ORDER DATE & TIME -->
+
+        <div class="info-item">
+
+          <i class="bi bi-calendar3"></i>
+
+          <div>
+
+            <span>
+              Order Date & Time
+            </span>
+
+            <strong>
+              {{ formatDateTime(order.created_at) }}
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <!-- EXPECTED DELIVERY -->
+
+        <div class="info-item">
+
+          <i class="bi bi-truck"></i>
+
+          <div>
+
+            <span>
+              Expected Delivery
+            </span>
+
+            <strong>
+              {{ formatDateTime(order.delivery_date) }}
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <!-- PAYMENT -->
+
+        <div class="info-item">
+
+          <i class="bi bi-credit-card"></i>
+
+          <div>
+
+            <span>
+              Payment
+            </span>
+
+            <strong>
+              {{ order.payment_method || 'COD' }}
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <!-- TOTAL -->
+
+        <div class="info-item">
+
+          <i class="bi bi-currency-rupee"></i>
+
+          <div>
+
+            <span>
+              Total Amount
+            </span>
+
+            <strong>
+              ₹{{ order.total_amount }}
+            </strong>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- =================================================
+           ADDRESS
+      ================================================== -->
+
+      <div class="address-box">
+
+        <i class="bi bi-geo-alt"></i>
+
+        <div>
+
+          <span>
+            Delivery Address
+          </span>
+
+          <strong>
+            {{ order.address }}
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <!-- =================================================
+           ACTION
+      ================================================== -->
+
+      <div class="order-bottom">
+
+        <button
+          type="button"
+          class="details-btn"
+          (click)="viewDetails(order)">
+
+          View Order Details
+
+          <i class="bi bi-arrow-right"></i>
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       ORDER DETAILS MODAL / PANEL
+  ====================================================== -->
+
+  <div
+    *ngIf="selectedOrder"
+    class="details-overlay"
+    (click)="closeDetails()">
+
+
+    <div
+      class="details-card"
+      (click)="$event.stopPropagation()">
+
+
+      <!-- DETAILS HEADER -->
+
+      <div class="details-header">
+
+        <div>
+
+          <p class="order-label">
+            ORDER DETAILS
+          </p>
+
+          <h2>
+            #{{ selectedOrder.id }}
+          </h2>
+
+        </div>
+
+
+        <button
+          type="button"
+          class="close-btn"
+          (click)="closeDetails()">
+
+          <i class="bi bi-x-lg"></i>
+
+        </button>
+
+      </div>
+
+
+      <!-- =================================================
+           LOADING DETAILS
+      ================================================== -->
+
+      <div
+        *ngIf="loadingDetails"
+        class="loading-details">
+
+        <div class="spinner"></div>
+
+        <p>
+          Loading order details...
+        </p>
+
+      </div>
+
+
+      <!-- =================================================
+           DETAILS CONTENT
+      ================================================== -->
+
+      <div
+        *ngIf="!loadingDetails">
+
+
+        <!-- ORDER STATUS -->
+
+        <div class="details-status">
+
+          <span>
+            Order Status
+          </span>
+
+          <strong
+            [ngClass]="
+              getStatusClass(
+                selectedOrder.order_status ||
+                selectedOrder.status
+              )
+            ">
+
+            {{ selectedOrder.order_status || selectedOrder.status || 'Pending' }}
+
+          </strong>
+
+        </div>
+
+
+        <!-- =================================================
+             ORDER DATE & DELIVERY TIME
+        ================================================== -->
+
+        <div class="details-date-box">
+
+          <!-- ORDER DATE & TIME -->
+
+          <div>
+
+            <span>
+              Order Date & Time
+            </span>
+
+            <strong>
+              {{ formatDateTime(selectedOrder.created_at) }}
+            </strong>
+
+          </div>
+
+
+          <!-- EXPECTED DELIVERY -->
+
+          <div>
+
+            <span>
+              Expected Delivery
+            </span>
+
+            <strong>
+              {{ formatDateTime(selectedOrder.delivery_date) }}
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <!-- =================================================
+             FOOD ITEMS
+        ================================================== -->
+
+        <h3 class="items-title">
+          Ordered Items
+        </h3>
+
+
+        <div
+          *ngIf="orderItems.length > 0"
+          class="ordered-items">
+
+
+          <div
+            class="ordered-item"
+            *ngFor="let item of orderItems">
+
+
+            <div class="item-icon">
+
+              <i class="bi bi-egg-fried"></i>
+
+            </div>
+
+
+            <div class="item-info">
+
+              <strong>
+                Food Item #{{ item.food_id }}
+              </strong>
+
+              <span>
+                Quantity: {{ item.quantity }}
+              </span>
+
+            </div>
+
+
+            <div class="item-price">
+
+              ₹{{ item.price }}
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- NO ITEMS -->
+
+        <div
+          *ngIf="orderItems.length === 0"
+          class="no-items">
+
+          No order items found.
+
+        </div>
+
+
+        <!-- =================================================
+             ORDER DETAILS
+        ================================================== -->
+
+        <div class="details-summary">
+
+
+          <!-- PAYMENT -->
+
+          <div class="summary-line">
+
+            <span>
+              Payment Method
+            </span>
+
+            <strong>
+              {{ selectedOrder.payment_method || 'COD' }}
+            </strong>
+
+          </div>
+
+
+          <!-- PHONE -->
+
+          <div class="summary-line">
+
+            <span>
+              Phone
+            </span>
+
+            <strong>
+              {{ selectedOrder.phone }}
+            </strong>
+
+          </div>
+
+
+          <!-- ADDRESS -->
+
+          <div class="summary-line">
+
+            <span>
+              Delivery Address
+            </span>
+
+            <strong>
+              {{ selectedOrder.address }}
+            </strong>
+
+          </div>
+
+
+          <hr>
+
+
+          <!-- TOTAL -->
+
+          <div class="final-total">
+
+            <span>
+              Total Amount
+            </span>
+
+            <strong>
+              ₹{{ selectedOrder.total_amount }}
+            </strong>
+
+          </div>
+
+        </div>
+
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

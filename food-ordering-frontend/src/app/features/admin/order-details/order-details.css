@@ -1,0 +1,422 @@
+* {
+  box-sizing: border-box;
+}
+
+.admin-page {
+  min-height: 100vh;
+  display: flex;
+  background: #f5f6f8;
+  color: #222;
+}
+
+
+/* ================= SIDEBAR ================= */
+
+.sidebar {
+  width: 240px;
+  min-height: 100vh;
+  background: #ffffff;
+  border-right: 1px solid #e5e5e5;
+  padding: 25px 18px;
+  display: flex;
+  flex-direction: column;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 30px;
+}
+
+.admin-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 25px;
+  border-bottom: 1px solid #eeeeee;
+}
+
+.admin-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #f1f1f1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-profile h4 {
+  margin: 0;
+  font-size: 15px;
+}
+
+.admin-profile p {
+  margin: 3px 0 0;
+  font-size: 12px;
+  color: #777;
+}
+
+.menu {
+  margin-top: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.menu a {
+  text-decoration: none;
+  color: #555;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.menu a:hover,
+.menu a.active {
+  background: #f1f1f1;
+  color: #111;
+}
+
+.logout-btn {
+  margin-top: auto;
+  border: none;
+  background: #f5f5f5;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+
+/* ================= MAIN ================= */
+
+.main-content {
+  flex: 1;
+  padding: 30px;
+  min-width: 0;
+}
+
+.top-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 25px;
+}
+
+.top-header h1 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.top-header p {
+  margin: 6px 0 0;
+  color: #777;
+  font-size: 14px;
+}
+
+.back-btn {
+  border: 1px solid #ddd;
+  background: #fff;
+  padding: 10px 16px;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.back-btn:hover {
+  background: #f5f5f5;
+}
+
+
+/* ================= MESSAGE ================= */
+
+.message-box {
+  background: #fff;
+  padding: 25px;
+  border-radius: 10px;
+  border: 1px solid #e5e5e5;
+  text-align: center;
+}
+
+.message-box.error {
+  color: #b42318;
+}
+
+
+/* ================= DETAILS ================= */
+
+.details-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+
+/* ================= ORDER HEADER ================= */
+
+.order-header-card {
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 10px;
+  padding: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.small-title {
+  margin: 0 0 6px;
+  color: #888;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.order-header-card h2 {
+  margin: 0;
+  font-size: 25px;
+}
+
+.status-section {
+  text-align: right;
+}
+
+.status {
+  display: inline-block;
+  padding: 7px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+
+/* ================= STATUS COLORS ================= */
+
+.status-pending {
+  background: #fff4d6;
+  color: #9a6700;
+}
+
+.status-confirmed {
+  background: #e7f0ff;
+  color: #2457a6;
+}
+
+.status-preparing {
+  background: #f0e8ff;
+  color: #6b35a8;
+}
+
+.status-ready {
+  background: #e5f7ed;
+  color: #207a48;
+}
+
+.status-out {
+  background: #e7f5ff;
+  color: #126a9b;
+}
+
+.status-delivered {
+  background: #e5f7ed;
+  color: #207a48;
+}
+
+.status-cancelled {
+  background: #ffe7e7;
+  color: #b42318;
+}
+
+
+/* ================= INFO CARD ================= */
+
+.info-card {
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 10px;
+  padding: 22px;
+}
+
+.info-card h3 {
+  margin: 0 0 20px;
+  font-size: 18px;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.info-item.full {
+  grid-column: 1 / -1;
+}
+
+.info-item span {
+  color: #888;
+  font-size: 12px;
+}
+
+.info-item strong {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.info-item .amount {
+  font-size: 17px;
+  font-weight: 700;
+}
+
+
+/* ================= ITEMS TABLE ================= */
+
+.items-table {
+  width: 100%;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.table-header,
+.table-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  align-items: center;
+}
+
+.table-header {
+  background: #f7f7f7;
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
+}
+
+.table-header div,
+.table-row div {
+  padding: 14px;
+}
+
+.table-row {
+  border-top: 1px solid #eeeeee;
+  font-size: 14px;
+}
+
+.item-name {
+  font-weight: 500;
+}
+
+.item-total {
+  font-weight: 600;
+}
+
+.empty-items {
+  padding: 20px;
+  background: #f8f8f8;
+  border-radius: 7px;
+  color: #777;
+  text-align: center;
+}
+
+
+/* ================= TOTAL ================= */
+
+.total-card {
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 10px;
+  padding: 22px;
+}
+
+.total-card div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.total-card span {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.total-card strong {
+  font-size: 22px;
+}
+
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 900px) {
+
+  .sidebar {
+    width: 200px;
+  }
+
+  .main-content {
+    padding: 20px;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .info-item.full {
+    grid-column: auto;
+  }
+
+}
+
+
+@media (max-width: 700px) {
+
+  .admin-page {
+    display: block;
+  }
+
+  .sidebar {
+    width: 100%;
+    min-height: auto;
+    border-right: none;
+    border-bottom: 1px solid #e5e5e5;
+  }
+
+  .menu {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .logout-btn {
+    margin-top: 15px;
+  }
+
+  .top-header {
+    align-items: flex-start;
+    gap: 15px;
+    flex-direction: column;
+  }
+
+  .order-header-card {
+    align-items: flex-start;
+    gap: 15px;
+    flex-direction: column;
+  }
+
+  .status-section {
+    text-align: left;
+  }
+
+  .items-table {
+    overflow-x: auto;
+  }
+
+  .table-header,
+  .table-row {
+    min-width: 600px;
+  }
+
+}

@@ -1,0 +1,158 @@
+<div class="contact-page">
+
+  <!-- Header -->
+  <section class="contact-header">
+
+    <p class="small-title">GET IN TOUCH</p>
+
+    <h1>Contact Us</h1>
+
+    <p>
+      Have a question, suggestion or need help with your order?
+      We are here to help.
+    </p>
+
+  </section>
+
+
+  <!-- Contact Content -->
+  <section class="contact-section">
+
+    <!-- Contact Information -->
+
+    <div class="contact-info">
+
+      <h2>Let's Talk</h2>
+
+      <p>
+        If you have any questions about Foodi, your order or our
+        services, feel free to contact us.
+      </p>
+
+
+      <div class="info-item">
+
+        <div class="info-icon">
+          <i class="bi bi-envelope"></i>
+        </div>
+
+        <div>
+          <h4>Email</h4>
+          <p>support@foodi.com</p>
+        </div>
+
+      </div>
+
+
+      <div class="info-item">
+
+        <div class="info-icon">
+          <i class="bi bi-telephone"></i>
+        </div>
+
+        <div>
+          <h4>Phone</h4>
+          <p>+91 98765 43210</p>
+        </div>
+
+      </div>
+
+
+      <div class="info-item">
+
+        <div class="info-icon">
+          <i class="bi bi-geo-alt"></i>
+        </div>
+
+        <div>
+          <h4>Address</h4>
+          <p>Pune, Maharashtra, India</p>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- Contact Form -->
+
+    <div class="contact-form">
+
+      <h2>Send Us a Message</h2>
+
+      <form (ngSubmit)="submitForm()">
+
+        <div class="form-group">
+
+          <label>Name</label>
+
+          <input
+            type="text"
+            name="name"
+            [(ngModel)]="name"
+            placeholder="Enter your name"
+            required
+          >
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Email</label>
+
+          <input
+            type="email"
+            name="email"
+            [(ngModel)]="email"
+            placeholder="Enter your email"
+            required
+          >
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Phone</label>
+
+          <input
+            type="tel"
+            name="phone"
+            [(ngModel)]="phone"
+            placeholder="Enter your phone number"
+          >
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Message</label>
+
+          <textarea
+            name="message"
+            [(ngModel)]="message"
+            rows="5"
+            placeholder="Write your message..."
+            required
+          ></textarea>
+
+        </div>
+
+
+        <button
+          type="submit"
+          class="submit-btn"
+        >
+          Send Message
+          <i class="bi bi-send"></i>
+        </button>
+
+      </form>
+
+    </div>
+
+  </section>
+
+</div>

@@ -1,0 +1,249 @@
+<app-admin-sidebar></app-admin-sidebar>
+<!-- MAIN CONTENT -->
+
+<main class="main-content">
+  <!-- TOP BAR -->
+
+  <header class="topbar">
+    <div>
+      <p class="page-label">FOOD ORDERING SYSTEM</p>
+
+      <h1>Dashboard</h1>
+    </div>
+
+    <div class="topbar-admin">
+      <div class="top-admin-icon">
+        <i class="bi bi-person-fill"></i>
+      </div>
+
+      <div>
+        <strong>
+          {{ adminUsername }}
+        </strong>
+
+        <span> Admin </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- =====================================
+         ERROR MESSAGE
+    ====================================== -->
+
+  <div class="alert alert-danger" *ngIf="errorMessage">
+    <i class="bi bi-exclamation-circle"></i>
+
+    {{ errorMessage }}
+  </div>
+
+  <!-- =====================================
+         STAT CARDS
+    ====================================== -->
+
+  <section class="stats-grid">
+    <!-- TOTAL ORDERS -->
+
+    <div class="stat-card">
+      <div class="stat-icon orders-icon">
+        <i class="bi bi-bag-check"></i>
+      </div>
+
+      <div>
+        <span> Total Orders </span>
+
+        <h2>
+          {{ totalOrders }}
+        </h2>
+      </div>
+    </div>
+
+    <!-- REVENUE -->
+
+    <div class="stat-card">
+      <div class="stat-icon revenue-icon">
+        <i class="bi bi-currency-rupee"></i>
+      </div>
+
+      <div>
+        <span> Total Revenue </span>
+
+        <h2>
+          {{ formatCurrency(totalRevenue) }}
+        </h2>
+      </div>
+    </div>
+
+    <!-- PENDING -->
+
+    <div class="stat-card">
+      <div class="stat-icon pending-icon">
+        <i class="bi bi-clock-history"></i>
+      </div>
+
+      <div>
+        <span> Pending Orders </span>
+
+        <h2>
+          {{ pendingOrders }}
+        </h2>
+      </div>
+    </div>
+
+    <!-- PREPARING -->
+
+    <div class="stat-card">
+      <div class="stat-icon preparing-icon">
+        <i class="bi bi-fire"></i>
+      </div>
+
+      <div>
+        <span> Preparing </span>
+
+        <h2>
+          {{ preparingOrders }}
+        </h2>
+      </div>
+    </div>
+
+    <!-- DELIVERED -->
+
+    <div class="stat-card">
+      <div class="stat-icon delivered-icon">
+        <i class="bi bi-check-circle"></i>
+      </div>
+
+      <div>
+        <span> Delivered </span>
+
+        <h2>
+          {{ deliveredOrders }}
+        </h2>
+      </div>
+    </div>
+  </section>
+
+  <!-- =====================================
+         RECENT ORDERS
+    ====================================== -->
+
+  <section class="orders-section">
+    <div class="section-header">
+      <div>
+        <p class="section-label">ORDER MANAGEMENT</p>
+
+        <h2>Recent Orders</h2>
+      </div>
+
+      <a routerLink="/admin/orders" class="view-all-btn">
+        View All Orders
+
+        <i class="bi bi-arrow-right"></i>
+      </a>
+    </div>
+
+    <!-- ===================================
+           LOADING
+      ==================================== -->
+
+    <div class="loading-box" *ngIf="loading">
+      <div class="spinner-border"></div>
+
+      <p>Loading orders...</p>
+    </div>
+
+    <!-- ===================================
+           TABLE
+      ==================================== -->
+
+    <div class="table-container" *ngIf="!loading">
+      <table *ngIf="recentOrders.length > 0">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+
+            <th>Customer</th>
+
+            <th>Date & Time</th>
+
+            <th>Amount</th>
+
+            <th>Status</th>
+
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let order of recentOrders">
+            <!-- ORDER ID -->
+
+            <td>
+              <strong> #{{ order.id }} </strong>
+            </td>
+
+            <!-- CUSTOMER -->
+
+            <td>
+              <div class="customer-name">
+                <div class="customer-avatar">
+                  <i class="bi bi-person"></i>
+                </div>
+
+                <span>
+                  {{ order.customer_name || 'Customer' }}
+                </span>
+              </div>
+            </td>
+
+            <!-- DATE -->
+
+            <td>
+              {{ formatDate(order.created_at) }}
+            </td>
+
+            <!-- AMOUNT -->
+
+            <td>
+              <strong>
+                {{ formatCurrency(order.total_amount) }}
+              </strong>
+            </td>
+
+            <!-- STATUS -->
+
+            <td>
+              <span
+                class="status-badge"
+                [ngClass]="getStatusClass(order.status || order.order_status)"
+              >
+                {{ order.status || order.order_status || 'Pending' }}
+              </span>
+            </td>
+
+            <!-- ACTION -->
+
+            <td>
+              <a [routerLink]="['/admin/orders']" class="details-btn"> View </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- =================================
+             NO ORDERS
+        ================================== -->
+
+      <div class="empty-orders" *ngIf="recentOrders.length === 0">
+        <div class="empty-icon">
+          <i class="bi bi-bag-x"></i>
+        </div>
+
+        <h3>No Orders Yet</h3>
+
+        <p>Customer orders will appear here.</p>
+
+        <a routerLink="/admin/orders"> Go to Orders </a>
+      </div>
+    </div>
+  </section>
+</main>

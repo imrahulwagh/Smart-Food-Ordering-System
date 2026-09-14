@@ -1,0 +1,626 @@
+<div class="checkout-page">
+
+  <!-- =====================================================
+       CHECKOUT HEADER
+  ====================================================== -->
+
+  <div class="checkout-header">
+
+    <div>
+
+      <p class="section-label">
+        CHECKOUT
+      </p>
+
+      <h1>
+        Complete Your Order
+      </h1>
+
+      <p class="subtitle">
+        Enter your delivery details and select a payment method.
+      </p>
+
+    </div>
+
+
+    <button
+      class="back-btn"
+      routerLink="/cart"
+      type="button">
+
+      <i class="bi bi-arrow-left"></i>
+
+      Back to Cart
+
+    </button>
+
+  </div>
+
+
+  <!-- =====================================================
+       ORDER CONFIRMED
+  ====================================================== -->
+
+  <div
+    *ngIf="orderPlaced"
+    class="success-card">
+
+    <div class="success-icon">
+
+      <i class="bi bi-check-lg"></i>
+
+    </div>
+
+
+    <h2>
+      Order Confirmed! 🎉
+    </h2>
+
+
+    <p>
+      Your order has been placed successfully.
+    </p>
+
+
+    <!-- ORDER DETAILS -->
+
+    <div class="success-details">
+
+      <!-- ORDER ID -->
+
+      <div>
+
+        <span>
+          Order ID
+        </span>
+
+        <strong>
+          #{{ orderId }}
+        </strong>
+
+      </div>
+
+
+      <!-- PAYMENT -->
+
+      <div>
+
+        <span>
+          Payment
+        </span>
+
+        <strong>
+          Cash on Delivery
+        </strong>
+
+      </div>
+
+
+      <!-- DELIVERY DATE -->
+
+      <div>
+
+        <span>
+          Delivery Date
+        </span>
+
+        <strong>
+          {{ deliveryDate }}
+        </strong>
+
+      </div>
+
+    </div>
+
+
+    <!-- SUCCESS BUTTONS -->
+
+    <div class="success-buttons">
+
+      <button
+        class="primary-btn"
+        type="button"
+        (click)="goToOrders()">
+
+        <i class="bi bi-bag-check"></i>
+
+        My Orders
+
+      </button>
+
+
+      <button
+        class="secondary-btn"
+        type="button"
+        (click)="continueShopping()">
+
+        Continue Shopping
+
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- =====================================================
+       CHECKOUT FORM
+  ====================================================== -->
+
+  <div
+    *ngIf="!orderPlaced"
+    class="checkout-layout">
+
+
+    <!-- ===================================================
+         LEFT SIDE
+    ==================================================== -->
+
+    <div class="checkout-left">
+
+
+      <!-- =================================================
+           DELIVERY DETAILS
+      ================================================== -->
+
+      <div class="checkout-card">
+
+        <h2>
+
+          <i class="bi bi-geo-alt"></i>
+
+          Delivery Details
+
+        </h2>
+
+
+        <!-- ADDRESS -->
+
+        <div class="form-group">
+
+          <label>
+            Delivery Address
+          </label>
+
+          <textarea
+            [(ngModel)]="address"
+            rows="4"
+            placeholder="Enter your complete delivery address">
+          </textarea>
+
+        </div>
+
+
+        <!-- PHONE -->
+
+        <div class="form-group">
+
+          <label>
+            Phone Number
+          </label>
+
+          <input
+            type="text"
+            [(ngModel)]="phone"
+            maxlength="10"
+            placeholder="Enter 10 digit mobile number">
+
+        </div>
+
+      </div>
+
+
+      <!-- =================================================
+           PAYMENT METHOD
+      ================================================== -->
+
+      <div class="checkout-card">
+
+        <h2>
+
+          <i class="bi bi-credit-card"></i>
+
+          Payment Method
+
+        </h2>
+
+
+        <!-- =================================================
+             CASH ON DELIVERY
+        ================================================== -->
+
+        <button
+          type="button"
+          class="payment-option"
+          [class.selected]="paymentMethod === 'COD'"
+          (click)="selectPaymentMethod('COD')">
+
+
+          <!-- ICON -->
+
+          <div class="payment-icon">
+
+            <i class="bi bi-cash-stack"></i>
+
+          </div>
+
+
+          <!-- TEXT -->
+
+          <div class="payment-info">
+
+            <strong>
+              Cash on Delivery
+            </strong>
+
+            <span>
+              Pay when your food is delivered
+            </span>
+
+          </div>
+
+
+          <!-- RADIO -->
+
+          <div class="payment-radio">
+
+            <i
+              *ngIf="paymentMethod === 'COD'"
+              class="bi bi-check-circle-fill">
+            </i>
+
+            <i
+              *ngIf="paymentMethod !== 'COD'"
+              class="bi bi-circle">
+            </i>
+
+          </div>
+
+        </button>
+
+
+        <!-- =================================================
+             ONLINE PAYMENT
+        ================================================== -->
+
+        <button
+          type="button"
+          class="payment-option"
+          [class.selected]="paymentMethod === 'ONLINE'"
+          (click)="selectPaymentMethod('ONLINE')">
+
+
+          <!-- ICON -->
+
+          <div class="payment-icon">
+
+            <i class="bi bi-wallet2"></i>
+
+          </div>
+
+
+          <!-- TEXT -->
+
+          <div class="payment-info">
+
+            <strong>
+              Online Payment
+            </strong>
+
+            <span>
+              Pay securely online
+            </span>
+
+          </div>
+
+
+          <!-- RADIO -->
+
+          <div class="payment-radio">
+
+            <i
+              *ngIf="paymentMethod === 'ONLINE'"
+              class="bi bi-check-circle-fill">
+            </i>
+
+            <i
+              *ngIf="paymentMethod !== 'ONLINE'"
+              class="bi bi-circle">
+            </i>
+
+          </div>
+
+        </button>
+
+
+        <!-- =================================================
+             ONLINE PAYMENT MESSAGE
+        ================================================== -->
+
+        <div
+          *ngIf="paymentMethod === 'ONLINE'"
+          class="online-info">
+
+          <i class="bi bi-info-circle"></i>
+
+          Online payment integration will be added soon.
+
+        </div>
+
+      </div>
+
+
+      <!-- =================================================
+           MESSAGE
+      ================================================== -->
+
+      <div
+        *ngIf="message"
+        class="message-box"
+        [ngClass]="
+          messageType === 'success'
+            ? 'message-success'
+            : 'message-error'
+        ">
+
+
+        <i
+          [class]="
+            messageType === 'success'
+              ? 'bi bi-check-circle'
+              : 'bi bi-exclamation-circle'
+          ">
+        </i>
+
+
+        {{ message }}
+
+      </div>
+
+
+      <!-- =================================================
+           COD CONFIRM BUTTON
+      ================================================== -->
+
+      <button
+        *ngIf="paymentMethod === 'COD'"
+        type="button"
+        class="confirm-btn"
+        (click)="confirmOrder()"
+        [disabled]="placingOrder">
+
+
+        <!-- NORMAL -->
+
+        <span
+          *ngIf="!placingOrder">
+
+          Confirm Order
+
+          <i class="bi bi-arrow-right"></i>
+
+        </span>
+
+
+        <!-- LOADING -->
+
+        <span
+          *ngIf="placingOrder">
+
+          Placing Order...
+
+        </span>
+
+      </button>
+
+
+      <!-- =================================================
+           ONLINE PAYMENT BUTTON
+      ================================================== -->
+
+      <button
+        *ngIf="paymentMethod === 'ONLINE'"
+        type="button"
+        class="confirm-btn"
+        (click)="confirmOrder()">
+
+        Proceed to Online Payment
+
+        <i class="bi bi-arrow-right"></i>
+
+      </button>
+
+    </div>
+
+
+    <!-- ===================================================
+         RIGHT SIDE
+    ==================================================== -->
+
+    <div class="checkout-right">
+
+
+      <!-- =================================================
+           ORDER SUMMARY
+      ================================================== -->
+
+      <div class="summary-card">
+
+        <h2>
+          Order Summary
+        </h2>
+
+
+        <!-- =================================================
+             LOADING
+        ================================================== -->
+
+        <div
+          *ngIf="loadingCart"
+          class="loading">
+
+          <p>
+            Loading order...
+          </p>
+
+        </div>
+
+
+        <!-- =================================================
+             CART ITEMS
+        ================================================== -->
+
+        <div
+          *ngIf="!loadingCart"
+          class="summary-items">
+
+
+          <div
+            class="summary-item"
+            *ngFor="let item of cartItems">
+
+
+            <!-- FOOD -->
+
+            <div class="summary-item-info">
+
+              <img
+                [src]="item.image"
+                [alt]="item.name">
+
+
+              <div>
+
+                <strong>
+                  {{ item.name }}
+                </strong>
+
+                <span>
+                  Qty: {{ item.quantity }}
+                </span>
+
+              </div>
+
+            </div>
+
+
+            <!-- ITEM TOTAL -->
+
+            <strong>
+              ₹{{ item.item_total }}
+            </strong>
+
+          </div>
+
+        </div>
+
+
+        <!-- =================================================
+             EMPTY CART
+        ================================================== -->
+
+        <div
+          *ngIf="
+            !loadingCart &&
+            cartItems.length === 0
+          "
+          class="empty-cart">
+
+          Your cart is empty.
+
+        </div>
+
+
+        <hr>
+
+
+        <!-- =================================================
+             SUBTOTAL
+        ================================================== -->
+
+        <div class="summary-row">
+
+          <span>
+            Subtotal
+          </span>
+
+          <strong>
+            ₹{{ cartTotal }}
+          </strong>
+
+        </div>
+
+
+        <!-- =================================================
+             DELIVERY FEE
+        ================================================== -->
+
+        <div class="summary-row">
+
+          <span>
+            Delivery Fee
+          </span>
+
+          <strong>
+            ₹{{ deliveryFee }}
+          </strong>
+
+        </div>
+
+
+        <!-- =================================================
+             TAX
+        ================================================== -->
+
+        <div class="summary-row">
+
+          <span>
+            Tax
+          </span>
+
+          <strong>
+            ₹{{ tax }}
+          </strong>
+
+        </div>
+
+
+        <hr>
+
+
+        <!-- =================================================
+             FINAL TOTAL
+        ================================================== -->
+
+        <div class="total-row">
+
+          <strong>
+            Total
+          </strong>
+
+          <strong>
+            ₹{{ getFinalTotal() }}
+          </strong>
+
+        </div>
+
+
+        <!-- =================================================
+             SECURE PAYMENT
+        ================================================== -->
+
+        <div class="secure-payment">
+
+          <i class="bi bi-shield-check"></i>
+
+          Secure & safe payment
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

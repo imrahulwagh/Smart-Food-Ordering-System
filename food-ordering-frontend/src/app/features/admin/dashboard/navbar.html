@@ -1,0 +1,101 @@
+<aside class="sidebar">
+
+  <!-- BRAND -->
+
+  <div class="brand">
+
+    <div class="brand-icon">
+      <i class="bi bi-shield-check"></i>
+    </div>
+
+    <div>
+      <h2>Foodie</h2>
+      <span>Admin Panel</span>
+    </div>
+
+  </div>
+
+
+  <!-- ADMIN PROFILE -->
+
+  <div class="admin-profile">
+
+    <div class="profile-icon">
+      <i class="bi bi-person"></i>
+    </div>
+
+    <div>
+      <strong>{{ adminUsername }}</strong>
+      <span>Administrator</span>
+    </div>
+
+  </div>
+
+
+  <!-- MENU -->
+
+  <nav class="sidebar-menu">
+
+    <a
+      routerLink="/admin/dashboard"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      <i class="bi bi-grid-1x2-fill"></i>
+      <span>Dashboard</span>
+    </a>
+
+
+    <a
+      routerLink="/admin/orders"
+      routerLinkActive="active"
+    >
+      <i class="bi bi-bag-check-fill"></i>
+      <span>Orders</span>
+    </a>
+
+
+    <a
+      routerLink="/admin/foods"
+      routerLinkActive="active"
+    >
+      <i class="bi bi-egg-fried"></i>
+      <span>Foods</span>
+    </a>
+
+
+    <a
+      routerLink="/admin/categories"
+      routerLinkActive="active"
+    >
+      <i class="bi bi-tags-fill"></i>
+      <span>Categories</span>
+    </a>
+
+
+    <a
+      routerLink="/admin/users"
+      routerLinkActive="active"
+    >
+      <i class="bi bi-people-fill"></i>
+      <span>Users</span>
+    </a>
+
+  </nav>
+
+
+  <!-- LOGOUT -->
+
+  <div class="sidebar-bottom">
+
+    <button
+      type="button"
+      (click)="logout()"
+    >
+      <i class="bi bi-box-arrow-left"></i>
+      <span>Logout</span>
+    </button>
+
+  </div>
+
+</aside>

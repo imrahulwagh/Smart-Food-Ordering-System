@@ -1,0 +1,339 @@
+<div class="admin-layout">
+
+  <!-- ================= SIDEBAR ================= -->
+
+  <aside class="sidebar">
+
+    <div class="logo">
+      🍔 <span>Foodie Admin</span>
+    </div>
+
+    <div class="admin-profile">
+
+      <div class="admin-avatar">
+        {{ adminUsername.charAt(0).toUpperCase() }}
+      </div>
+
+      <div>
+        <h4>{{ adminUsername }}</h4>
+        <p>Administrator</p>
+      </div>
+
+    </div>
+
+
+    <nav class="sidebar-nav">
+
+      <a
+        routerLink="/admin/dashboard"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        <i class="bi bi-speedometer2"></i>
+        Dashboard
+      </a>
+
+      <a
+        routerLink="/admin/orders"
+        routerLinkActive="active"
+      >
+        <i class="bi bi-cart3"></i>
+        Orders
+      </a>
+
+      <a href="/admin/foods">
+        <i class="bi bi-egg-fried"></i>
+        Foods
+      </a>
+
+      <a href="/admin/categories">
+        <i class="bi bi-grid"></i>
+        Categories    
+      </a>
+
+      <a href="/admin/users">
+        <i class="bi bi-people"></i>
+        Users
+      </a>
+
+    </nav>
+
+
+    <button
+      class="logout-btn"
+      (click)="logout()"
+    >
+      <i class="bi bi-box-arrow-left"></i>
+      Logout
+    </button>
+
+  </aside>
+
+
+  <!-- ================= MAIN CONTENT ================= -->
+
+  <main class="main-content">
+
+
+    <!-- TOP BAR -->
+
+    <header class="topbar">
+
+      <div>
+        <h1>Orders</h1>
+        <p>Manage customer orders</p>
+      </div>
+
+      <div class="topbar-admin">
+
+        <div class="small-avatar">
+          {{ adminUsername.charAt(0).toUpperCase() }}
+        </div>
+
+        <span>{{ adminUsername }}</span>
+
+      </div>
+
+    </header>
+
+
+    <!-- ================= ERROR ================= -->
+
+    <div
+      class="error-message"
+      *ngIf="errorMessage"
+    >
+      <i class="bi bi-exclamation-circle"></i>
+      {{ errorMessage }}
+    </div>
+
+
+    <!-- ================= FILTER ================= -->
+
+    <section class="filter-section">
+
+      <div class="filter-title">
+        <h3>All Orders</h3>
+        <span>{{ filteredOrders.length }} Orders</span>
+      </div>
+
+      <div class="filter-box">
+
+        <label for="statusFilter">
+          Filter by Status
+        </label>
+
+        <select
+          id="statusFilter"
+          [(ngModel)]="selectedStatus"
+        >
+
+          <option value="All">
+            All Orders
+          </option>
+
+          <option
+            *ngFor="let status of statusList"
+            [value]="status"
+          >
+            {{ status }}
+          </option>
+
+        </select>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= LOADING ================= -->
+
+    <div
+      class="loading-box"
+      *ngIf="loading"
+    >
+
+      <div class="spinner"></div>
+
+      <p>Loading orders...</p>
+
+    </div>
+
+
+    <!-- ================= ORDERS TABLE ================= -->
+
+    <section
+      class="orders-card"
+      *ngIf="!loading"
+    >
+
+      <div
+        class="table-wrapper"
+        *ngIf="filteredOrders.length > 0"
+      >
+
+        <table>
+
+          <thead>
+
+            <tr>
+
+              <th>Order ID</th>
+
+              <th>Customer</th>
+
+              <th>Date & Time</th>
+
+              <th>Amount</th>
+
+              <th>Status</th>
+
+              <th>Action</th>
+
+            </tr>
+
+          </thead>
+
+
+          <tbody>
+
+            <tr
+              *ngFor="let order of filteredOrders"
+            >
+
+              <!-- ORDER ID -->
+
+              <td>
+                <strong>
+                  #{{ order.id }}
+                </strong>
+              </td>
+
+
+              <!-- CUSTOMER -->
+
+              <td>
+
+                <div class="customer-info">
+
+                  <div class="customer-avatar">
+                    {{
+                      (
+                        order.customer_name ||
+                        order.profiles?.full_name ||
+                        'C'
+                      ).charAt(0).toUpperCase()
+                    }}
+                  </div>
+
+                  <span>
+                    {{
+                      order.customer_name ||
+                      order.profiles?.full_name ||
+                      'Customer'
+                    }}
+                  </span>
+
+                </div>
+
+              </td>
+
+
+              <!-- DATE -->
+
+              <td>
+                {{ formatDate(order.created_at) }}
+              </td>
+
+
+              <!-- AMOUNT -->
+
+              <td>
+                <strong>
+                  {{ formatCurrency(order.total_amount) }}
+                </strong>
+              </td>
+
+
+              <!-- STATUS -->
+
+              <td>
+
+                <select
+                  class="status-select"
+                  [ngClass]="
+                    getStatusClass(
+                      order.status ||
+                      order.order_status ||
+                      'Pending'
+                    )
+                  "
+                  [ngModel]="
+                    order.status ||
+                    order.order_status ||
+                    'Pending'
+                  "
+                  (ngModelChange)="
+                    updateStatus(order, $event)
+                  "
+                >
+
+                  <option
+                    *ngFor="let status of statusList"
+                    [value]="status"
+                  >
+                    {{ status }}
+                  </option>
+
+                </select>
+
+              </td>
+
+
+              <!-- ACTION -->
+
+              <td>
+
+                <button
+                  class="view-btn"
+                  (click)="viewOrder(order)"
+                >
+                  <i class="bi bi-eye"></i>
+                  View
+                </button>
+
+              </td>
+
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+
+      <!-- ================= EMPTY ================= -->
+
+      <div
+        class="empty-box"
+        *ngIf="filteredOrders.length === 0"
+      >
+
+        <div class="empty-icon">
+          <i class="bi bi-cart-x"></i>
+        </div>
+
+        <h3>No orders found</h3>
+
+        <p>
+          There are no orders for the selected status.
+        </p>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</div>

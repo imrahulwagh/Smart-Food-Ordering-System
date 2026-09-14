@@ -1,0 +1,436 @@
+* {
+  box-sizing: border-box;
+}
+
+.admin-page {
+  min-height: 100vh;
+  display: flex;
+  background: #f5f6f8;
+  color: #222;
+}
+
+
+/* ================= SIDEBAR ================= */
+
+.sidebar {
+  width: 240px;
+  min-height: 100vh;
+  background: #ffffff;
+  border-right: 1px solid #e5e5e5;
+  padding: 25px 18px;
+  display: flex;
+  flex-direction: column;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 30px;
+}
+
+.admin-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 25px;
+  border-bottom: 1px solid #eeeeee;
+}
+
+.admin-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #f1f1f1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-profile h4 {
+  margin: 0;
+  font-size: 15px;
+}
+
+.admin-profile p {
+  margin: 3px 0 0;
+  font-size: 12px;
+  color: #777;
+}
+
+
+/* ================= MENU ================= */
+
+.menu {
+  margin-top: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.menu a {
+  text-decoration: none;
+  color: #555;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.menu a:hover,
+.menu a.active {
+  background: #f1f1f1;
+  color: #111;
+}
+
+
+/* ================= LOGOUT ================= */
+
+.logout-btn {
+  margin-top: auto;
+  border: none;
+  background: #f5f5f5;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+
+/* ================= MAIN ================= */
+
+.main-content {
+  flex: 1;
+  min-width: 0;
+  padding: 30px;
+}
+
+
+/* ================= HEADER ================= */
+
+.top-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 25px;
+}
+
+.top-header h1 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.top-header p {
+  margin: 6px 0 0;
+  color: #777;
+  font-size: 14px;
+}
+
+
+/* ================= ADD BUTTON ================= */
+
+.add-food-btn {
+  border: none;
+  background: #222;
+  color: #fff;
+  padding: 11px 18px;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.add-food-btn:hover {
+  background: #000;
+}
+
+
+/* ================= SEARCH ================= */
+
+.search-box {
+  width: 100%;
+  max-width: 400px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.search-box input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 14px;
+}
+
+
+/* ================= MESSAGE ================= */
+
+.message-box {
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 10px;
+  padding: 25px;
+  text-align: center;
+  color: #777;
+}
+
+.message-box.error {
+  color: #b42318;
+}
+
+
+/* ================= FOOD TABLE ================= */
+
+.food-card {
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  min-width: 950px;
+  border-collapse: collapse;
+}
+
+thead {
+  background: #f7f7f7;
+}
+
+th {
+  text-align: left;
+  padding: 15px;
+  font-size: 12px;
+  color: #666;
+  font-weight: 600;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+td {
+  padding: 15px;
+  font-size: 13px;
+  border-bottom: 1px solid #eeeeee;
+  vertical-align: middle;
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+tbody tr:hover {
+  background: #fafafa;
+}
+
+
+/* ================= FOOD ================= */
+
+.food-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 150px;
+}
+
+.food-info img {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.food-info strong {
+  font-size: 14px;
+}
+
+.description {
+  color: #777;
+  display: block;
+  max-width: 230px;
+}
+
+
+/* ================= STATUS ================= */
+
+.status {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 15px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.status.available {
+  background: #e5f7ed;
+  color: #207a48;
+}
+
+.status.unavailable {
+  background: #ffe7e7;
+  color: #b42318;
+}
+
+
+/* ================= ACTIONS ================= */
+
+.actions {
+  display: flex;
+  gap: 7px;
+}
+
+.actions button {
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.edit-btn {
+  background: #f1f1f1;
+}
+
+.delete-btn {
+  background: #ffe7e7;
+}
+
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 800px) {
+
+  .admin-page {
+    display: block;
+  }
+
+  .sidebar {
+    width: 100%;
+    min-height: auto;
+    border-right: none;
+    border-bottom: 1px solid #e5e5e5;
+  }
+
+  .menu {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .logout-btn {
+    margin-top: 15px;
+  }
+
+  .main-content {
+    padding: 20px;
+  }
+
+  .top-header {
+    align-items: flex-start;
+    gap: 15px;
+    flex-direction: column;
+  }
+
+}
+.add-food-form {
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+.form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.form-header h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+.close-btn {
+  border: none;
+  background: transparent;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  margin-bottom: 7px;
+  font-weight: 600;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 7px;
+  font-size: 14px;
+  outline: none;
+}
+
+.form-group textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.cancel-btn,
+.save-btn {
+  border: none;
+  padding: 10px 18px;
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+.cancel-btn {
+  background: #eeeeee;
+}
+
+.save-btn {
+  background: #222222;
+  color: white;
+}
+
+@media (max-width: 768px) {
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .full-width {
+    grid-column: auto;
+  }
+
+}

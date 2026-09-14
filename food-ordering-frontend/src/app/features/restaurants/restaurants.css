@@ -1,0 +1,153 @@
+.restaurants-page {
+  background: #fffaf7;
+  min-height: 100vh;
+  padding: 60px 8%;
+}
+
+/* Header */
+
+.page-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.small-title {
+  color: #ff572f;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+
+.page-header h1 {
+  font-size: 42px;
+  font-weight: 700;
+  color: #222;
+  margin-bottom: 10px;
+}
+
+.page-header p {
+  color: #777;
+}
+
+
+/* Categories */
+
+.categories {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 45px;
+}
+
+.category {
+  border: 1px solid #ddd;
+  background: white;
+  padding: 10px 22px;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.category:hover,
+.category.active {
+  background: #ff572f;
+  color: white;
+  border-color: #ff572f;
+}
+
+
+/* Restaurant Grid */
+
+.restaurant-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+}
+
+
+/* Card */
+
+.restaurant-card {
+  background: white;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.07);
+  transition: 0.3s;
+}
+
+.restaurant-card:hover {
+  transform: translateY(-5px);
+}
+
+.restaurant-card img {
+  width: 100%;
+  height: 230px;
+  object-fit: cover;
+}
+
+.restaurant-info {
+  padding: 22px;
+}
+
+.restaurant-info h3 {
+  font-size: 23px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.restaurant-meta {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  color: #777;
+  font-size: 14px;
+}
+
+.rating {
+  color: #e89b00;
+  font-weight: 600;
+}
+
+.restaurant-info p {
+  color: #777;
+  margin: 15px 0;
+  line-height: 1.6;
+}
+
+
+/* Button */
+
+.view-menu {
+  border: none;
+  background: #ff572f;
+  color: white;
+  padding: 11px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.view-menu:hover {
+  background: #e94b27;
+}
+
+
+/* Mobile */
+
+@media (max-width: 768px) {
+
+  .restaurants-page {
+    padding: 40px 20px;
+  }
+
+  .page-header h1 {
+    font-size: 32px;
+  }
+
+  .restaurant-grid {
+    grid-template-columns: 1fr;
+  }
+
+}

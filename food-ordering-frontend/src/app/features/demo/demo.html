@@ -1,0 +1,71 @@
+<div class="container mt-5">
+
+  <h1 class="text-center mb-4">
+    Food Data From Database
+  </h1>
+
+  <p class="text-center">
+    Total Foods: {{ foods.length }}
+  </p>
+
+  <div *ngIf="foods.length === 0" class="text-center">
+
+    <p>Loading food data...</p>
+
+  </div>
+
+  <div class="row">
+
+    <div
+      class="col-md-4 mb-4"
+      *ngFor="let food of foods"
+    >
+
+      <div class="card h-100">
+
+        <img
+          [src]="food.image"
+          [alt]="food.name"
+          class="card-img-top"
+          style="height: 200px; object-fit: cover;"
+        >
+
+        <div class="card-body">
+
+          <h3 class="card-title">
+            {{ food.name }}
+          </h3>
+
+          <p class="card-text">
+            {{ food.description }}
+          </p>
+
+          <p>
+            <strong>Price:</strong>
+            ₹{{ food.price }}
+          </p>
+
+          <p>
+            <strong>Food ID:</strong>
+            {{ food.id }}
+          </p>
+
+          <p>
+            <strong>Category ID:</strong>
+            {{ food.category_id }}
+          </p>
+
+          <p>
+            <strong>Available:</strong>
+            {{ food.s_available ? 'Yes' : 'No' }}
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

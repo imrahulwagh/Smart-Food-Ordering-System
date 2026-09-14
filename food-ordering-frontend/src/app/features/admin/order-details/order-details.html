@@ -1,0 +1,340 @@
+<div class="admin-page">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+
+    <div class="logo">
+      🍔 Foodie
+    </div>
+
+    <div class="admin-profile">
+
+      <div class="admin-icon">
+        👤
+      </div>
+
+      <div>
+        <h4>{{ adminUsername }}</h4>
+        <p>Administrator</p>
+      </div>
+
+    </div>
+
+    <nav class="menu">
+
+      <a routerLink="/admin/dashboard">
+        📊 Dashboard
+      </a>
+
+      <a
+        routerLink="/admin/orders"
+        routerLinkActive="active"
+      >
+        🛒 Orders
+      </a>
+
+      <a routerLink="/admin/foods"
+      outerLinkActive="active">
+        🍔 Foods
+      </a>
+
+      <a routerLink="/admin/categories"
+      outerLinkActive="active">
+        📂 Categories
+      </a>
+
+      <a routerLink="/admin/users"
+      outerLinkActive="active">
+        👥 Users
+      </a>
+
+    </nav>
+
+    <button
+      class="logout-btn"
+      (click)="logout()"
+    >
+      🚪 Logout
+    </button>
+
+  </aside>
+
+
+  <!-- Main Content -->
+  <main class="main-content">
+
+    <!-- Header -->
+    <div class="top-header">
+
+      <div>
+        <h1>Order Details</h1>
+        <p>
+          View complete information about this order
+        </p>
+      </div>
+
+      <button
+        class="back-btn"
+        (click)="goBack()"
+      >
+        ← Back to Orders
+      </button>
+
+    </div>
+
+
+    <!-- Loading -->
+    <div
+      class="message-box"
+      *ngIf="loading"
+    >
+      Loading order details...
+    </div>
+
+
+    <!-- Error -->
+    <div
+      class="message-box error"
+      *ngIf="!loading && errorMessage"
+    >
+      {{ errorMessage }}
+    </div>
+
+
+    <!-- Order Details -->
+    <div
+      class="details-container"
+      *ngIf="!loading && order"
+    >
+
+      <!-- Order Header -->
+      <div class="order-header-card">
+
+        <div>
+
+          <p class="small-title">
+            ORDER ID
+          </p>
+
+          <h2>
+            #{{ order.id }}
+          </h2>
+
+        </div>
+
+        <div class="status-section">
+
+          <p class="small-title">
+            STATUS
+          </p>
+
+          <span
+            class="status"
+            [ngClass]="
+              getStatusClass(
+                order.status ||
+                order.order_status
+              )
+            "
+          >
+            {{
+              order.status ||
+              order.order_status ||
+              'Pending'
+            }}
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- Customer Information -->
+      <div class="info-card">
+
+        <h3>Customer Information</h3>
+
+        <div class="info-grid">
+
+          <div class="info-item">
+
+            <span>Customer Name</span>
+
+            <strong>
+              {{ order.customer_name || 'Customer' }}
+            </strong>
+
+          </div>
+
+
+          <div class="info-item">
+
+            <span>Phone</span>
+
+            <strong>
+              {{ order.phone || '-' }}
+            </strong>
+
+          </div>
+
+
+          <div class="info-item full">
+
+            <span>Delivery Address</span>
+
+            <strong>
+              {{ order.address || '-' }}
+            </strong>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- Order Information -->
+      <div class="info-card">
+
+        <h3>Order Information</h3>
+
+        <div class="info-grid">
+
+          <div class="info-item">
+
+            <span>Order Date & Time</span>
+
+            <strong>
+              {{ formatDate(order.created_at) }}
+            </strong>
+
+          </div>
+
+
+          <div class="info-item">
+
+            <span>Payment Method</span>
+
+            <strong>
+              {{ order.payment_method || '-' }}
+            </strong>
+
+          </div>
+
+
+          <div class="info-item">
+
+            <span>Order Status</span>
+
+            <strong>
+              {{
+                order.status ||
+                order.order_status ||
+                'Pending'
+              }}
+            </strong>
+
+          </div>
+
+
+          <div class="info-item">
+
+            <span>Total Amount</span>
+
+            <strong class="amount">
+              {{ formatCurrency(order.total_amount) }}
+            </strong>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- Items -->
+      <div class="info-card">
+
+        <h3>Ordered Items</h3>
+
+
+        <div
+          class="empty-items"
+          *ngIf="items.length === 0"
+        >
+          No order items found.
+        </div>
+
+
+        <div
+          class="items-table"
+          *ngIf="items.length > 0"
+        >
+
+          <div class="table-header">
+
+            <div>Item</div>
+            <div>Quantity</div>
+            <div>Price</div>
+            <div>Total</div>
+
+          </div>
+
+
+          <div
+            class="table-row"
+            *ngFor="let item of items"
+          >
+
+            <div class="item-name">
+
+              {{ getItemName(item) }}
+
+            </div>
+
+
+            <div>
+
+              {{ getItemQuantity(item) }}
+
+            </div>
+
+
+            <div>
+
+              {{ formatCurrency(getItemPrice(item)) }}
+
+            </div>
+
+
+            <div class="item-total">
+
+              {{ formatCurrency(getItemTotal(item)) }}
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- Total -->
+      <div class="total-card">
+
+        <div>
+          <span>Order Total</span>
+
+          <strong>
+            {{ formatCurrency(order.total_amount) }}
+          </strong>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+</div>

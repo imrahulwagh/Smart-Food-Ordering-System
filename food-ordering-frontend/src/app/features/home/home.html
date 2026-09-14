@@ -1,0 +1,660 @@
+<!-- ================= NAVBAR ================= -->
+
+<nav class="navbar navbar-expand-lg bg-white shadow-sm sticky-top">
+
+  <div class="container">
+
+    <!-- LOGO -->
+    <a class="navbar-brand fw-bold fs-3" routerLink="/home">
+      <span class="brand-icon">🍔</span>
+      Foodie
+    </a>
+
+
+    <!-- HAMBURGER BUTTON -->
+    <button
+      class="navbar-toggler"
+      type="button"
+      (click)="toggleMenu()"
+      [attr.aria-expanded]="menuOpen"
+      aria-label="Toggle navigation">
+
+      <span class="navbar-toggler-icon"></span>
+
+    </button>
+
+
+    <!-- NAVIGATION MENU -->
+    <div
+      class="collapse navbar-collapse"
+      [class.show]="menuOpen"
+      id="mainNavbar">
+
+
+      <!-- MAIN LINKS -->
+      <ul class="navbar-nav mx-auto">
+
+        <!-- HOME -->
+        <li class="nav-item">
+
+          <a
+            class="nav-link"
+            routerLink="/home"
+            (click)="menuOpen = false">
+
+            Home
+
+          </a>
+
+        </li>
+
+
+        <!-- MENU -->
+        <li class="nav-item">
+
+          <a
+            class="nav-link"
+            routerLink="/menu"
+            (click)="menuOpen = false">
+
+            Menu
+
+          </a>
+
+        </li>
+
+
+        <!-- RESTAURANTS -->
+        <li class="nav-item">
+
+          <a
+            class="nav-link"
+            routerLink="/restaurants"
+            (click)="menuOpen = false">
+
+            Restaurants
+
+          </a>
+
+        </li>
+
+
+        <!-- ABOUT -->
+        <li class="nav-item">
+
+          <a
+            class="nav-link"
+            routerLink="/about"
+            (click)="menuOpen = false">
+
+            About
+
+          </a>
+
+        </li>
+
+
+        <!-- CONTACT -->
+        <li class="nav-item">
+
+          <a
+            class="nav-link"
+            routerLink="/contact"
+            (click)="menuOpen = false">
+
+            Contact
+
+          </a>
+
+        </li>
+
+      </ul>
+
+
+      <!-- RIGHT SIDE -->
+      <div class="d-flex align-items-center gap-3">
+
+
+        <!-- SEARCH -->
+        <button
+          class="icon-btn"
+          type="button"
+          (click)="toggleSearch()">
+
+          <i class="bi bi-search"></i>
+
+        </button>
+
+
+        <!-- CART -->
+        <div class="cart-icon">
+
+          <button
+            type="button"
+            routerLink="/cart"
+            class="cart-btn"
+            (click)="menuOpen = false">
+
+            <i class="bi bi-cart3"></i>
+
+            <span class="cart-count">
+              {{ cartCount }}
+            </span>
+
+          </button>
+
+        </div>
+
+
+        <!-- LOGIN -->
+        <button
+          class="btn btn-food"
+          routerLink="/login"
+          (click)="menuOpen = false">
+
+          Login
+
+        </button>
+
+
+        <!-- PROFILE -->
+        <button
+          class="icon-btn"
+          routerLink="/profile"
+          (click)="menuOpen = false">
+
+          <i class="bi bi-person"></i>
+
+        </button>
+
+
+      </div>
+
+    </div>
+
+  </div>
+
+</nav>
+
+<!-- ================= HERO SECTION ================= -->
+<section class="hero-section">
+
+  <div class="container">
+
+    <div class="row align-items-center">
+
+      <!-- LEFT -->
+
+      <div class="col-lg-6">
+
+        <span class="hero-small-title">
+          🍴 Delicious food is waiting for you
+        </span>
+
+        <h1 class="hero-title">
+          Delicious Food,
+          <span>Delivered To Your Door</span>
+        </h1>
+
+        <p class="hero-description">
+          Order your favourite meals from the best restaurants
+          and enjoy fresh and delicious food at your doorstep.
+        </p>
+
+
+        <!-- SEARCH -->
+
+        <div class="search-box">
+
+          <i class="bi bi-search"></i>
+
+          <input
+            type="text"
+            placeholder="Search food or restaurant..."
+          />
+
+          <button class="btn btn-food">
+            Search
+          </button>
+
+        </div>
+
+
+        <button class="btn btn-food hero-button">
+          Explore Menu
+          <i class="bi bi-arrow-right ms-2"></i>
+        </button>
+
+      </div>
+
+
+      <!-- RIGHT -->
+
+      <div class="col-lg-6 text-center">
+
+        <div class="hero-image-wrapper">
+
+          <img
+            src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800"
+            alt="Delicious Burger"
+            class="hero-image"
+          />
+
+          <div class="floating-card rating-card">
+
+            <strong>⭐ 4.8</strong>
+
+            <small>Customer Rating</small>
+
+          </div>
+
+          <div class="floating-card delivery-card">
+
+            <span>🚚</span>
+
+            <div>
+
+              <strong>30 min</strong>
+
+              <small>Fast Delivery</small>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+
+
+<!-- ================= CATEGORIES ================= -->
+<div class="row g-4 justify-content-center">
+
+  <div
+    class="col-6 col-md-4 col-lg-3"
+    *ngFor="let category of categories"
+  >
+
+    <div class="category-card">
+
+      <div class="category-icon">
+        {{ getIcon(category.image) }}
+      </div>
+
+      <h5>{{ category.name }}</h5>
+
+      <p>{{ category.count }} Items</p>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+<!-- ================= POPULAR FOOD ================= -->
+<section class="popular-section">
+
+  <div class="container">
+
+    <div class="section-heading">
+
+      <span>Our Menu</span>
+
+      <h2>Popular Food</h2>
+
+      <p>Most loved dishes ordered by our customers</p>
+
+    </div>
+
+
+    <!-- LOADING -->
+    <div
+      *ngIf="loadingFoods"
+      class="text-center py-4">
+
+      <p>Loading food...</p>
+
+    </div>
+
+
+    <!-- FOOD CARDS -->
+    <div class="row g-4">
+
+      <div
+        class="col-md-6 col-lg-4"
+        *ngFor="let food of foods">
+
+        <div class="food-card">
+
+          <!-- FOOD IMAGE -->
+          <div class="food-image">
+
+            <img
+              [src]="food.image"
+              [alt]="food.name"
+            />
+
+            <span class="food-tag">
+              Popular
+            </span>
+
+          </div>
+
+
+          <!-- FOOD CONTENT -->
+          <div class="food-content">
+
+            <div class="d-flex justify-content-between">
+
+              <h5>
+                {{ food.name }}
+              </h5>
+
+              <span class="rating">
+                ⭐ 4.8
+              </span>
+
+            </div>
+
+
+            <p>
+              {{ food.description }}
+            </p>
+
+
+            <div
+              class="d-flex justify-content-between align-items-center">
+
+              <h4>
+                ₹{{ food.price }}
+              </h4>
+              <button
+                class="add-cart"
+                (click)="addToCart(food)">
+
+                <i class="bi bi-plus"></i>
+
+                Add
+
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- NO FOOD -->
+    <div
+      *ngIf="!loadingFoods && foods.length === 0"
+      class="text-center py-4">
+
+      <p>No food available.</p>
+
+    </div>
+
+  </div>
+
+
+
+
+
+
+
+
+
+
+</section>
+<!-- ================= SPECIAL OFFER ================= -->
+<section class="offer-section">
+
+  <div class="container">
+
+    <div class="offer-box">
+
+      <div>
+
+        <span class="offer-small">
+          🎉 Limited Time Offer
+        </span>
+
+        <h2>
+          Get 20% OFF on Your First Order
+        </h2>
+
+        <p>
+          Use coupon code
+          <strong>FIRST20</strong>
+          and enjoy your first meal with us.
+        </p>
+
+        <button class="btn btn-food">
+          Order Now
+        </button>
+
+      </div>
+
+      <div class="offer-emoji">
+        🍕
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ================= WHY CHOOSE US ================= -->
+<section class="why-section">
+
+  <div class="container">
+
+    <div class="section-heading text-center">
+
+      <span>Why Foodie?</span>
+
+      <h2>Why Choose Us</h2>
+
+    </div>
+
+
+    <div class="row g-4 text-center">
+
+      <div class="col-md-6 col-lg-3">
+
+        <div class="why-card">
+
+          <div class="why-icon">
+            🚚
+          </div>
+
+          <h5>Fast Delivery</h5>
+
+          <p>
+            Get your favourite food delivered quickly.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="col-md-6 col-lg-3">
+
+        <div class="why-card">
+
+          <div class="why-icon">
+            🍴
+          </div>
+
+          <h5>Quality Food</h5>
+
+          <p>
+            Fresh and delicious food from trusted restaurants.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="col-md-6 col-lg-3">
+
+        <div class="why-card">
+
+          <div class="why-icon">
+            🔒
+          </div>
+
+          <h5>Secure Payment</h5>
+
+          <p>
+            Your payments are safe and secure.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <div class="col-md-6 col-lg-3">
+
+        <div class="why-card">
+
+          <div class="why-icon">
+            ⭐
+          </div>
+
+          <h5>Best Restaurants</h5>
+
+          <p>
+            Discover highly rated restaurants near you.
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ================= FOOTER ================= -->
+<footer class="footer">
+
+  <div class="container">
+
+    <div class="row g-5">
+
+      <div class="col-lg-4">
+
+        <h3>
+          🍔 Foodie
+        </h3>
+
+        <p>
+          Your favourite food delivered fresh and fast
+          to your doorstep.
+        </p>
+
+        <div class="social-icons">
+
+          <i class="bi bi-facebook"></i>
+
+          <i class="bi bi-instagram"></i>
+
+          <i class="bi bi-twitter"></i>
+
+        </div>
+
+      </div>
+
+
+      <div class="col-6 col-lg-2">
+
+        <h5>Quick Links</h5>
+
+        <a href="#">Home</a>
+
+        <a href="#">Menu</a>
+
+        <a href="#">Restaurants</a>
+
+        <a href="#">About</a>
+
+      </div>
+
+
+      <div class="col-6 col-lg-2">
+
+        <h5>Support</h5>
+
+        <a href="#">Help Center</a>
+
+        <a href="#">Contact</a>
+
+        <a href="#">Privacy</a>
+
+        <a href="#">Terms</a>
+
+      </div>
+
+
+      <div class="col-lg-4">
+
+        <h5>Newsletter</h5>
+
+        <p>
+          Subscribe for offers and updates.
+        </p>
+
+        <div class="newsletter">
+
+          <input
+            type="email"
+            placeholder="Your email"
+          />
+
+          <button class="btn btn-food">
+            Subscribe
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <hr>
+
+    <div class="text-center">
+
+      <p class="mb-0">
+        © 2026 Foodie. All Rights Reserved.
+      </p>
+
+    </div>
+
+  </div>
+
+</footer>

@@ -1,0 +1,324 @@
+<div class="admin-layout">
+
+  <!-- SIDEBAR -->
+
+  <aside class="sidebar">
+
+    <div class="sidebar-logo">
+      🍔 Foodie Admin
+    </div>
+
+    <nav class="sidebar-menu">
+
+      <a
+        routerLink="/admin/dashboard"
+        routerLinkActive="active">
+        📊 Dashboard
+      </a>
+
+      <a
+        routerLink="/admin/orders"
+        routerLinkActive="active">
+        📦 Orders
+      </a>
+
+      <a
+        routerLink="/admin/foods"
+        routerLinkActive="active">
+        🍕 Foods
+      </a>
+
+      <a
+        routerLink="/admin/categories"
+        routerLinkActive="active">
+        🗂️ Categories
+      </a>
+
+      <a
+        routerLink="/admin/users"
+        routerLinkActive="active">
+        👥 Users
+      </a>
+
+    </nav>
+
+    <button
+      class="logout-btn"
+      (click)="logout()">
+      🚪 Logout
+    </button>
+
+  </aside>
+
+
+  <!-- MAIN CONTENT -->
+
+  <main class="main-content">
+
+    <!-- TOP HEADER -->
+
+    <header class="top-header">
+
+      <div>
+        <h1>Categories</h1>
+
+        <p>
+          Manage food categories
+        </p>
+      </div>
+
+      <div class="admin-info">
+
+        <span>👤 {{ adminUsername }}</span>
+
+      </div>
+
+    </header>
+
+
+    <!-- ADD BUTTON -->
+
+    <div class="page-actions">
+
+      <button
+        class="add-category-btn"
+        (click)="openAddForm()">
+
+        + Add Category
+
+      </button>
+
+    </div>
+
+
+    <!-- ADD / EDIT FORM -->
+
+    <div
+      class="category-form"
+      *ngIf="showCategoryForm">
+
+      <div class="form-header">
+
+        <h2>
+          {{ isEditMode ? 'Edit Category' : 'Add Category' }}
+        </h2>
+
+        <button
+          class="close-btn"
+          (click)="closeCategoryForm()">
+
+          ✕
+
+        </button>
+
+      </div>
+
+
+      <div class="form-grid">
+
+        <div class="form-group">
+
+          <label>
+            Category Name
+          </label>
+
+          <input
+            type="text"
+            [(ngModel)]="categoryForm.name"
+            placeholder="Enter category name">
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>
+            Image
+          </label>
+
+          <input
+            type="text"
+            [(ngModel)]="categoryForm.image"
+            placeholder="Example: pizza">
+
+        </div>
+
+      </div>
+
+
+      <div class="form-actions">
+
+        <button
+          class="cancel-btn"
+          (click)="closeCategoryForm()">
+
+          Cancel
+
+        </button>
+
+        <button
+          class="save-btn"
+          (click)="saveCategory()">
+
+          {{ isEditMode ? 'Update Category' : 'Save Category' }}
+
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- SEARCH -->
+
+    <div class="search-box">
+
+      <input
+        type="text"
+        [(ngModel)]="searchText"
+        placeholder="Search category...">
+
+    </div>
+
+
+    <!-- LOADING -->
+
+    <div
+      class="message-box"
+      *ngIf="loading">
+
+      Loading categories...
+
+    </div>
+
+
+    <!-- ERROR -->
+
+    <div
+      class="error-box"
+      *ngIf="!loading && errorMessage">
+
+      {{ errorMessage }}
+
+    </div>
+
+
+    <!-- CATEGORY TABLE -->
+
+    <div
+      class="table-container"
+      *ngIf="!loading && !errorMessage">
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>ID</th>
+
+            <th>Category</th>
+
+            <th>Image</th>
+
+            <th>Food Count</th>
+
+            <th>Created At</th>
+
+            <th>Action</th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+          <tr
+            *ngFor="let category of filteredCategories">
+
+            <td>
+              {{ category.id }}
+            </td>
+
+            <td>
+
+              <strong>
+                {{ category.name }}
+              </strong>
+
+            </td>
+
+            <td>
+
+              <span class="image-key">
+                {{ category.image || '-' }}
+              </span>
+
+            </td>
+
+            <td>
+
+              <span class="food-count">
+                {{ category.count || 0 }}
+              </span>
+
+            </td>
+
+            <td>
+
+              {{ category.created_at || '-' }}
+
+            </td>
+
+            <td>
+
+              <div class="action-buttons">
+
+                <button
+                  class="edit-btn"
+                  (click)="openEditForm(category)">
+
+                  Edit
+
+                </button>
+
+                <button
+                  class="delete-btn"
+                  (click)="deleteCategory(category)">
+
+                  Delete
+
+                </button>
+
+              </div>
+
+            </td>
+
+          </tr>
+
+
+          <!-- NO DATA -->
+
+          <tr
+            *ngIf="filteredCategories.length === 0">
+
+            <td
+              colspan="6"
+              class="no-data">
+
+              No categories found.
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </main>
+
+</div>

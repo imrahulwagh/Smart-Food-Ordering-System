@@ -1,0 +1,301 @@
+<div class="cart-page">
+
+  <!-- =====================================================
+       CART HEADER
+  ====================================================== -->
+
+  <div class="cart-header">
+
+    <div>
+
+      <p class="section-label">
+        YOUR ORDER
+      </p>
+
+      <h1>
+        Your Cart
+      </h1>
+
+      <p class="subtitle">
+        Review your items before placing your order.
+      </p>
+
+    </div>
+
+
+    <!-- HOME PAR JAYEGA -->
+
+    <button
+      class="continue-btn"
+      routerLink="/home"
+    >
+
+      <i class="bi bi-arrow-left"></i>
+
+      Continue Shopping
+
+    </button>
+
+  </div>
+
+
+
+  <!-- =====================================================
+       CART LAYOUT
+  ====================================================== -->
+
+  <div class="cart-layout">
+
+
+    <!-- ===================================================
+         CART ITEMS
+    ==================================================== -->
+
+    <div class="cart-items">
+
+
+      <!-- LOADING -->
+
+      <div
+        *ngIf="loadingCart"
+        class="text-center py-4"
+      >
+
+        <p>
+          Loading cart...
+        </p>
+
+      </div>
+
+
+
+      <!-- CART ITEMS -->
+
+      <div
+        class="cart-card"
+        *ngFor="let item of cartItems"
+      >
+
+
+        <!-- FOOD IMAGE -->
+
+        <img
+          [src]="item.image"
+          [alt]="item.name"
+        >
+
+
+
+        <!-- FOOD DETAILS -->
+
+        <div class="item-details">
+
+          <h3>
+            {{ item.name }}
+          </h3>
+
+          <p>
+            Food item
+          </p>
+
+          <span class="item-price">
+            ₹{{ item.price }}
+          </span>
+
+        </div>
+
+
+
+        <!-- QUANTITY -->
+
+        <div class="quantity">
+
+
+          <!-- MINUS -->
+
+          <button
+            (click)="decreaseQuantity(item)"
+          >
+
+            −
+
+          </button>
+
+
+
+          <!-- CURRENT QUANTITY -->
+
+          <span>
+            {{ item.quantity }}
+          </span>
+
+
+
+          <!-- PLUS -->
+
+          <button
+            (click)="increaseQuantity(item)"
+          >
+
+            +
+
+          </button>
+
+        </div>
+
+
+
+        <!-- ITEM TOTAL -->
+
+        <div class="item-total">
+
+          ₹{{ item.item_total }}
+
+        </div>
+
+
+
+        <!-- REMOVE -->
+
+        <button
+  class="remove-btn"
+  (click)="removeItem(item)">
+  <i class="bi bi-trash"></i>
+</button>
+
+
+      </div>
+
+
+
+      <!-- EMPTY CART -->
+
+      <div
+        *ngIf="!loadingCart && cartItems.length === 0"
+        class="text-center py-4"
+      >
+
+        <p>
+          Your cart is empty.
+        </p>
+
+      </div>
+
+
+    </div>
+
+
+
+    <!-- ===================================================
+         ORDER SUMMARY
+    ==================================================== -->
+
+    <div class="summary-card">
+
+
+      <h2>
+        Order Summary
+      </h2>
+
+
+
+      <!-- SUBTOTAL -->
+
+      <div class="summary-row">
+
+        <span>
+          Subtotal
+        </span>
+
+        <span>
+          ₹{{ cartTotal }}
+        </span>
+
+      </div>
+
+
+
+      <!-- DELIVERY -->
+
+      <div class="summary-row">
+
+        <span>
+          Delivery Fee
+        </span>
+
+        <span>
+          ₹{{ deliveryFee }}
+        </span>
+
+      </div>
+
+
+
+      <!-- TAX -->
+
+      <div class="summary-row">
+
+        <span>
+          Tax
+        </span>
+
+        <span>
+          ₹{{ tax }}
+        </span>
+
+      </div>
+
+
+
+      <hr>
+
+
+
+      <!-- FINAL TOTAL -->
+
+      <div class="total-row">
+
+        <strong>
+          Total
+        </strong>
+
+        <strong>
+          ₹{{ getFinalTotal() }}
+        </strong>
+
+      </div>
+
+
+
+      <!-- CHECKOUT -->
+
+      <button
+  class="checkout-btn"
+  routerLink="/checkout">
+  
+  Proceed to Checkout
+  <i class="bi bi-arrow-right"></i>
+
+</button>
+
+
+
+      <!-- SECURE PAYMENT -->
+
+      <div class="secure-payment">
+
+        <i class="bi bi-shield-check"></i>
+
+        <span>
+          Secure & safe payment
+        </span>
+
+      </div>
+
+
+    </div>
+
+
+  </div>
+
+</div>

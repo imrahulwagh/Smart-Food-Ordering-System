@@ -1,0 +1,470 @@
+<div class="admin-page">
+
+  <!-- ================= SIDEBAR ================= -->
+
+  <aside class="sidebar">
+
+    <div class="logo">
+      🍔 Foodie
+    </div>
+
+    <div class="admin-profile">
+
+      <div class="admin-icon">
+        👤
+      </div>
+
+      <div>
+        <h4>{{ adminUsername }}</h4>
+        <p>Administrator</p>
+      </div>
+
+    </div>
+
+    <nav class="menu">
+
+      <a
+        routerLink="/admin/dashboard"
+        routerLinkActive="active">
+        📊 Dashboard
+      </a>
+
+      <a
+        routerLink="/admin/orders"
+        routerLinkActive="active">
+        🛒 Orders
+      </a>
+
+      <a
+        routerLink="/admin/foods"
+        routerLinkActive="active">
+        🍔 Foods
+      </a>
+
+      <a
+        routerLink="/admin/categories"
+        routerLinkActive="active">
+        📂 Categories
+      </a>
+
+      <a
+        routerLink="/admin/users"
+        routerLinkActive="active">
+        👥 Users
+      </a>
+
+    </nav>
+
+    <button
+      class="logout-btn"
+      (click)="logout()">
+      🚪 Logout
+    </button>
+
+  </aside>
+
+
+  <!-- ================= MAIN CONTENT ================= -->
+
+  <main class="main-content">
+
+    <!-- HEADER -->
+
+    <div class="top-header">
+
+      <div>
+        <h1>Foods</h1>
+
+        <p>
+          Manage food items available on Foodie
+        </p>
+      </div>
+
+      <button
+        class="add-food-btn"
+        (click)="openAddForm()">
+
+        + Add Food
+
+      </button>
+
+    </div>
+
+
+    <!-- ================= ADD / EDIT FORM ================= -->
+
+    <div
+      class="add-food-form"
+      *ngIf="showFoodForm">
+
+      <div class="form-header">
+
+        <h2>
+          {{ isEditMode ? 'Edit Food' : 'Add New Food' }}
+        </h2>
+
+        <button
+          type="button"
+          class="close-btn"
+          (click)="closeFoodForm()">
+
+          ✕
+
+        </button>
+
+      </div>
+
+
+      <div class="form-grid">
+
+        <!-- CATEGORY -->
+
+        <div class="form-group">
+
+          <label>
+            Category ID *
+          </label>
+
+          <input
+            type="number"
+            [(ngModel)]="foodForm.category_id"
+            placeholder="Enter category ID">
+
+        </div>
+
+
+        <!-- NAME -->
+
+        <div class="form-group">
+
+          <label>
+            Food Name *
+          </label>
+
+          <input
+            type="text"
+            [(ngModel)]="foodForm.name"
+            placeholder="Enter food name">
+
+        </div>
+
+
+        <!-- DESCRIPTION -->
+
+        <div class="form-group full-width">
+
+          <label>
+            Description
+          </label>
+
+          <textarea
+            [(ngModel)]="foodForm.description"
+            placeholder="Enter food description">
+          </textarea>
+
+        </div>
+
+
+        <!-- PRICE -->
+
+        <div class="form-group">
+
+          <label>
+            Price *
+          </label>
+
+          <input
+            type="number"
+            [(ngModel)]="foodForm.price"
+            placeholder="Enter price">
+
+        </div>
+
+
+        <!-- IMAGE -->
+
+        <div class="form-group">
+
+          <label>
+            Image URL
+          </label>
+
+          <input
+            type="text"
+            [(ngModel)]="foodForm.image"
+            placeholder="Paste image URL">
+
+        </div>
+
+
+        <!-- STATUS -->
+
+        <div class="form-group">
+
+          <label>
+            Availability
+          </label>
+
+          <select
+            [(ngModel)]="foodForm.s_available">
+
+            <option [ngValue]="true">
+              Available
+            </option>
+
+            <option [ngValue]="false">
+              Unavailable
+            </option>
+
+          </select>
+
+        </div>
+
+      </div>
+
+
+      <!-- FORM BUTTONS -->
+
+      <div class="form-actions">
+
+        <button
+          type="button"
+          class="cancel-btn"
+          (click)="closeFoodForm()">
+
+          Cancel
+
+        </button>
+
+        <button
+          type="button"
+          class="save-btn"
+          (click)="saveFood()">
+
+          {{ isEditMode ? 'Update Food' : 'Add Food' }}
+
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- ================= SEARCH ================= -->
+
+    <div class="search-box">
+
+      <span>
+        🔍
+      </span>
+
+      <input
+        type="text"
+        [(ngModel)]="searchText"
+        placeholder="Search food...">
+
+    </div>
+
+
+    <!-- ================= LOADING ================= -->
+
+    <div
+      class="message-box"
+      *ngIf="loading">
+
+      Loading foods...
+
+    </div>
+
+
+    <!-- ================= ERROR ================= -->
+
+    <div
+      class="message-box error"
+      *ngIf="!loading && errorMessage">
+
+      {{ errorMessage }}
+
+    </div>
+
+
+    <!-- ================= NO FOOD ================= -->
+
+    <div
+      class="message-box"
+      *ngIf="
+        !loading &&
+        !errorMessage &&
+        filteredFoods.length === 0
+      ">
+
+      No food found.
+
+    </div>
+
+
+    <!-- ================= FOOD TABLE ================= -->
+
+    <div
+      class="food-card"
+      *ngIf="
+        !loading &&
+        !errorMessage &&
+        filteredFoods.length > 0
+      ">
+
+      <div class="table-wrapper">
+
+        <table>
+
+          <thead>
+
+            <tr>
+
+              <th>ID</th>
+
+              <th>Food</th>
+
+              <th>Description</th>
+
+              <th>Price</th>
+
+              <th>Category ID</th>
+
+              <th>Status</th>
+
+              <th>Action</th>
+
+            </tr>
+
+          </thead>
+
+
+          <tbody>
+
+            <tr
+              *ngFor="let food of filteredFoods">
+
+              <!-- ID -->
+
+              <td>
+                {{ food.id }}
+              </td>
+
+
+              <!-- FOOD -->
+
+              <td>
+
+                <div class="food-info">
+
+                  <img
+                    *ngIf="food.image"
+                    [src]="food.image"
+                    [alt]="food.name">
+
+                  <div>
+
+                    <strong>
+                      {{ food.name }}
+                    </strong>
+
+                  </div>
+
+                </div>
+
+              </td>
+
+
+              <!-- DESCRIPTION -->
+
+              <td>
+
+                <span class="description">
+
+                  {{ food.description || '-' }}
+
+                </span>
+
+              </td>
+
+
+              <!-- PRICE -->
+
+              <td>
+
+                <strong>
+
+                  {{ formatCurrency(food.price) }}
+
+                </strong>
+
+              </td>
+
+
+              <!-- CATEGORY -->
+
+              <td>
+
+                {{ food.category_id || '-' }}
+
+              </td>
+
+
+              <!-- STATUS -->
+
+              <td>
+
+                <span
+                  class="status"
+                  [ngClass]="getAvailabilityClass(food)">
+
+                  {{ getAvailability(food) }}
+
+                </span>
+
+              </td>
+
+
+              <!-- ACTIONS -->
+
+              <td>
+
+                <div class="actions">
+
+                  <button
+                    class="edit-btn"
+                    title="Edit Food"
+                    (click)="openEditForm(food)">
+
+                    ✏️
+
+                  </button>
+
+
+                  <button
+                    class="delete-btn"
+                    title="Delete Food"
+                    (click)="deleteFood(food)">
+
+                    🗑️
+
+                  </button>
+
+                </div>
+
+              </td>
+
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+  </main>
+
+</div>

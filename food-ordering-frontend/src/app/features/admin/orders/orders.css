@@ -1,0 +1,529 @@
+/* ==========================================
+   MAIN LAYOUT
+========================================== */
+
+.admin-layout {
+  min-height: 100vh;
+  background: #f5f6fa;
+  display: flex;
+}
+
+
+/* ==========================================
+   SIDEBAR
+========================================== */
+
+.sidebar {
+  width: 250px;
+  min-height: 100vh;
+  background: #1f2937;
+  color: white;
+  padding: 22px 15px;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.logo {
+  font-size: 20px;
+  font-weight: 700;
+  padding: 8px 10px 25px;
+}
+
+.admin-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 10px;
+  border-top: 1px solid #374151;
+  border-bottom: 1px solid #374151;
+}
+
+.admin-avatar,
+.small-avatar,
+.customer-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #f59e0b;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.admin-profile h4 {
+  margin: 0;
+  font-size: 14px;
+}
+
+.admin-profile p {
+  margin: 3px 0 0;
+  color: #9ca3af;
+  font-size: 12px;
+}
+
+
+/* ==========================================
+   SIDEBAR NAV
+========================================== */
+
+.sidebar-nav {
+  margin-top: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sidebar-nav a {
+  color: #d1d5db;
+  text-decoration: none;
+  padding: 12px;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14px;
+}
+
+.sidebar-nav a:hover,
+.sidebar-nav a.active {
+  background: #374151;
+  color: white;
+}
+
+.sidebar-nav i {
+  font-size: 17px;
+}
+
+
+/* ==========================================
+   LOGOUT
+========================================== */
+
+.logout-btn {
+  margin-top: auto;
+  border: none;
+  background: transparent;
+  color: #d1d5db;
+  padding: 12px;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 7px;
+  font-size: 14px;
+}
+
+.logout-btn:hover {
+  background: #374151;
+  color: white;
+}
+
+
+/* ==========================================
+   MAIN CONTENT
+========================================== */
+
+.main-content {
+  margin-left: 250px;
+  width: calc(100% - 250px);
+  padding: 25px 30px;
+}
+
+
+/* ==========================================
+   TOPBAR
+========================================== */
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.topbar h1 {
+  margin: 0;
+  font-size: 28px;
+  color: #111827;
+}
+
+.topbar p {
+  margin: 5px 0 0;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.topbar-admin {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.small-avatar {
+  width: 35px;
+  height: 35px;
+  font-size: 14px;
+}
+
+
+/* ==========================================
+   ERROR
+========================================== */
+
+.error-message {
+  background: #fee2e2;
+  color: #991b1b;
+  padding: 13px 15px;
+  border-radius: 7px;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+
+/* ==========================================
+   FILTER SECTION
+========================================== */
+
+.filter-section {
+  background: white;
+  border-radius: 10px;
+  padding: 18px 20px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.filter-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.filter-title h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #111827;
+}
+
+.filter-title span {
+  background: #f3f4f6;
+  color: #6b7280;
+  padding: 5px 9px;
+  border-radius: 15px;
+  font-size: 12px;
+}
+
+.filter-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.filter-box label {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.filter-box select {
+  padding: 9px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: white;
+  outline: none;
+}
+
+
+/* ==========================================
+   ORDERS CARD
+========================================== */
+
+.orders-card {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+}
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+
+/* ==========================================
+   TABLE
+========================================== */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead {
+  background: #f9fafb;
+}
+
+th {
+  text-align: left;
+  padding: 15px;
+  font-size: 12px;
+  color: #6b7280;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+td {
+  padding: 15px;
+  border-top: 1px solid #f0f0f0;
+  font-size: 13px;
+  color: #374151;
+  white-space: nowrap;
+}
+
+tbody tr:hover {
+  background: #fafafa;
+}
+
+
+/* ==========================================
+   CUSTOMER
+========================================== */
+
+.customer-info {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.customer-avatar {
+  width: 32px;
+  height: 32px;
+  font-size: 12px;
+}
+
+
+/* ==========================================
+   STATUS
+========================================== */
+
+.status-select {
+  padding: 6px 9px;
+  border-radius: 15px;
+  border: 1px solid #d1d5db;
+  font-size: 12px;
+  cursor: pointer;
+  outline: none;
+  background: white;
+}
+
+.status-pending {
+  color: #92400e;
+  background: #fef3c7;
+}
+
+.status-confirmed {
+  color: #1d4ed8;
+  background: #dbeafe;
+}
+
+.status-preparing {
+  color: #7c3aed;
+  background: #ede9fe;
+}
+
+.status-ready {
+  color: #047857;
+  background: #d1fae5;
+}
+
+.status-out {
+  color: #0369a1;
+  background: #e0f2fe;
+}
+
+.status-delivered {
+  color: #166534;
+  background: #dcfce7;
+}
+
+.status-cancelled {
+  color: #991b1b;
+  background: #fee2e2;
+}
+
+
+/* ==========================================
+   VIEW BUTTON
+========================================== */
+
+.view-btn {
+  border: 1px solid #d1d5db;
+  background: white;
+  color: #374151;
+  padding: 7px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.view-btn:hover {
+  background: #f3f4f6;
+}
+
+
+/* ==========================================
+   LOADING
+========================================== */
+
+.loading-box {
+  background: white;
+  min-height: 300px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+}
+
+.spinner {
+  width: 35px;
+  height: 35px;
+  border: 3px solid #e5e7eb;
+  border-top: 3px solid #374151;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-bottom: 12px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* ==========================================
+   EMPTY
+========================================== */
+
+.empty-box {
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.empty-icon {
+  font-size: 45px;
+  color: #9ca3af;
+  margin-bottom: 10px;
+}
+
+.empty-box h3 {
+  margin: 0;
+  color: #374151;
+}
+
+.empty-box p {
+  color: #9ca3af;
+  font-size: 13px;
+}
+
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 900px) {
+
+  .sidebar {
+    width: 210px;
+  }
+
+  .main-content {
+    margin-left: 210px;
+    width: calc(100% - 210px);
+    padding: 20px;
+  }
+
+}
+
+
+@media (max-width: 700px) {
+
+  .sidebar {
+    width: 65px;
+    padding: 15px 8px;
+  }
+
+  .logo span,
+  .admin-profile > div:last-child,
+  .sidebar-nav a:not(.active)::after,
+  .sidebar-nav a {
+    font-size: 0;
+  }
+
+  .logo {
+    text-align: center;
+  }
+
+  .admin-profile {
+    justify-content: center;
+  }
+
+  .sidebar-nav a {
+    justify-content: center;
+  }
+
+  .sidebar-nav i {
+    font-size: 18px;
+  }
+
+  .logout-btn {
+    text-align: center;
+  }
+
+  .logout-btn i {
+    font-size: 18px;
+  }
+
+  .main-content {
+    margin-left: 65px;
+    width: calc(100% - 65px);
+    padding: 15px;
+  }
+
+  .topbar h1 {
+    font-size: 23px;
+  }
+
+  .topbar-admin span {
+    display: none;
+  }
+
+  .filter-section {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .filter-box {
+    width: 100%;
+  }
+
+  .filter-box select {
+    flex: 1;
+  }
+
+}

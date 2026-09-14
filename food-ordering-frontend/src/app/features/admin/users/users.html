@@ -1,0 +1,361 @@
+<div class="admin-layout">
+
+  <!-- SIDEBAR -->
+
+  <aside class="sidebar">
+
+    <div class="sidebar-logo">
+      🍔 Foodie Admin
+    </div>
+
+    <nav class="sidebar-menu">
+
+      <a
+        routerLink="/admin/dashboard"
+        routerLinkActive="active">
+        📊 Dashboard
+      </a>
+
+      <a
+        routerLink="/admin/orders"
+        routerLinkActive="active">
+        📦 Orders
+      </a>
+
+      <a
+        routerLink="/admin/foods"
+        routerLinkActive="active">
+        🍕 Foods
+      </a>
+
+      <a
+        routerLink="/admin/categories"
+        routerLinkActive="active">
+        🗂️ Categories
+      </a>
+
+      <a
+        routerLink="/admin/users"
+        routerLinkActive="active">
+        👥 Users
+      </a>
+
+    </nav>
+
+    <button
+      class="logout-btn"
+      (click)="logout()">
+
+      🚪 Logout
+
+    </button>
+
+  </aside>
+
+
+  <!-- MAIN CONTENT -->
+
+  <main class="main-content">
+
+    <!-- HEADER -->
+
+    <header class="top-header">
+
+      <div>
+
+        <h1>Users</h1>
+
+        <p>
+          Manage registered users
+        </p>
+
+      </div>
+
+      <div class="admin-info">
+
+        👤 {{ adminUsername }}
+
+      </div>
+
+    </header>
+
+
+    <!-- SEARCH -->
+
+    <div class="search-box">
+
+      <input
+        type="text"
+        [(ngModel)]="searchText"
+        placeholder="Search by name, email or phone...">
+
+    </div>
+
+
+    <!-- EDIT USER FORM -->
+
+    <div
+      class="user-form"
+      *ngIf="showUserForm">
+
+      <div class="form-header">
+
+        <h2>
+          Edit User
+        </h2>
+
+        <button
+          class="close-btn"
+          (click)="closeUserForm()">
+
+          ✕
+
+        </button>
+
+      </div>
+
+
+      <div class="form-grid">
+
+        <div class="form-group">
+
+          <label>
+            Full Name
+          </label>
+
+          <input
+            type="text"
+            [(ngModel)]="userForm.full_name"
+            placeholder="Enter full name">
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>
+            Phone
+          </label>
+
+          <input
+            type="text"
+            [(ngModel)]="userForm.phone"
+            placeholder="Enter phone number">
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>
+            Email
+          </label>
+
+          <input
+            type="email"
+            [(ngModel)]="userForm.email"
+            placeholder="Enter email">
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>
+            Photo
+          </label>
+
+          <input
+            type="text"
+            [(ngModel)]="userForm.photo"
+            placeholder="Photo URL">
+
+        </div>
+
+      </div>
+
+
+      <div class="form-actions">
+
+        <button
+          class="cancel-btn"
+          (click)="closeUserForm()">
+
+          Cancel
+
+        </button>
+
+        <button
+          class="save-btn"
+          (click)="updateUser()">
+
+          Update User
+
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- LOADING -->
+
+    <div
+      class="message-box"
+      *ngIf="loading">
+
+      Loading users...
+
+    </div>
+
+
+    <!-- ERROR -->
+
+    <div
+      class="error-box"
+      *ngIf="!loading && errorMessage">
+
+      {{ errorMessage }}
+
+    </div>
+
+
+    <!-- USERS TABLE -->
+
+    <div
+      class="table-container"
+      *ngIf="!loading && !errorMessage">
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>ID</th>
+
+            <th>User</th>
+
+            <th>Email</th>
+
+            <th>Phone</th>
+
+            <th>Photo</th>
+
+            <th>Created At</th>
+
+            <th>Action</th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+          <tr
+            *ngFor="let user of filteredUsers">
+
+            <td>
+
+              <span class="user-id">
+
+                {{ user.id }}
+
+              </span>
+
+            </td>
+
+
+            <td>
+
+              <strong>
+                {{ user.full_name || 'No Name' }}
+              </strong>
+
+            </td>
+
+
+            <td>
+
+              {{ user.email || '-' }}
+
+            </td>
+
+
+            <td>
+
+              {{ user.phone || '-' }}
+
+            </td>
+
+
+            <td>
+
+              <span class="photo-value">
+
+                {{ user.photo || '-' }}
+
+              </span>
+
+            </td>
+
+
+            <td>
+
+              {{ formatDate(user.created_at) }}
+
+            </td>
+
+
+            <td>
+
+              <div class="action-buttons">
+
+                <button
+                  class="edit-btn"
+                  (click)="openEditForm(user)">
+
+                  Edit
+
+                </button>
+
+                <button
+                  class="delete-btn"
+                  (click)="deleteUser(user)">
+
+                  Delete
+
+                </button>
+
+              </div>
+
+            </td>
+
+          </tr>
+
+
+          <!-- NO DATA -->
+
+          <tr
+            *ngIf="filteredUsers.length === 0">
+
+            <td
+              colspan="7"
+              class="no-data">
+
+              No users found.
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </main>
+
+</div>

@@ -1,0 +1,176 @@
+<!-- Login Page -->
+<section class="login-page">
+
+  <div class="login-container">
+
+    <!-- Left Image Section -->
+    <div class="login-image">
+
+      <div class="image-overlay"></div>
+
+      <div class="image-content">
+        <h1>Delicious food.<br />Delivered to you.</h1>
+
+        <p>
+          Order your favourite meals from the best restaurants
+          around you.
+        </p>
+      </div>
+
+    </div>
+
+    <!-- Right Login Form -->
+    <div class="login-form-section">
+
+      <div class="login-form">
+
+        <h2>Welcome Back 👋</h2>
+
+        <p class="subtitle">
+          Login to continue ordering delicious food
+        </p>
+
+        <!-- Error / Success Message -->
+        <div
+          *ngIf="message"
+          class="login-message"
+          [class.error-message]="messageType === 'error'"
+          [class.success-message]="messageType === 'success'"
+        >
+          {{ message }}
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+
+          <label>Email Address</label>
+
+          <div class="input-box">
+
+            <i class="bi bi-envelope"></i>
+
+            <input
+              type="email"
+              placeholder="Enter your email"
+              [(ngModel)]="email"
+            />
+
+          </div>
+
+        </div>
+
+        <!-- Password -->
+        <div class="form-group password-group">
+
+          <label>Password</label>
+
+          <div class="input-box">
+
+            <i class="bi bi-lock"></i>
+
+            <input
+              type="password"
+              placeholder="Enter your password"
+              [(ngModel)]="password"
+            />
+
+          </div>
+
+          <!-- Forgot Password -->
+          <div class="forgot-password">
+
+            <a routerLink="/forgot-password">
+              Forgot Password?
+            </a>
+
+          </div>
+
+        </div>
+
+        <!-- Remember Me -->
+        <div class="remember">
+
+          <input
+            type="checkbox"
+            id="remember"
+          />
+
+          <label for="remember">
+            Remember me
+          </label>
+
+        </div>
+
+        <!-- Login Button -->
+        <button
+          class="login-btn"
+          type="button"
+          (click)="login()"
+          [disabled]="loading"
+        >
+          {{ loading ? 'Logging in...' : 'Login' }}
+
+          <i
+            *ngIf="!loading"
+            class="bi bi-arrow-right"
+          ></i>
+
+        </button>
+
+        <!-- OR -->
+        <div class="divider">
+
+          <span></span>
+
+          <p>OR</p>
+
+          <span></span>
+
+        </div>
+
+        <!-- Google -->
+        <button
+          class="google-btn"
+          type="button"
+          (click)="continueWithGoogle()"
+        >
+          <i class="bi bi-google"></i>
+          Continue with Google
+        </button>
+
+
+        <!-- =================================================
+             ADMIN LOGIN
+        ================================================== -->
+
+        <div class="admin-login">
+
+          <a routerLink="/admin-login">
+
+            <i class="bi bi-shield-lock"></i>
+
+            Admin Login
+
+          </a>
+
+        </div>
+
+
+        <!-- Create Account -->
+        <p class="create-account">
+
+          Don't have an account?
+
+          <a routerLink="/register">
+            Create Account
+          </a>
+
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>

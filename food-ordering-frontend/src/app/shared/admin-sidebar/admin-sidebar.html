@@ -1,0 +1,63 @@
+<aside class="sidebar">
+
+  <div class="sidebar-logo">
+    <h2>Foodie Admin</h2>
+  </div>
+
+  <div class="admin-profile">
+    <div class="profile-icon">
+      <i class="bi bi-person-circle"></i>
+    </div>
+
+    <div>
+      <h4>{{ adminUsername }}</h4>
+      <p>Administrator</p>
+    </div>
+  </div>
+
+  <nav class="sidebar-menu">
+
+    <a
+      routerLink="/admin/dashboard"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }">
+      <i class="bi bi-speedometer2"></i>
+      <span>Dashboard</span>
+    </a>
+
+    <a
+      routerLink="/admin/orders"
+      routerLinkActive="active">
+      <i class="bi bi-cart3"></i>
+      <span>Orders</span>
+    </a>
+
+    <a
+      routerLink="/admin/foods"
+      routerLinkActive="active">
+      <i class="bi bi-egg-fried"></i>
+      <span>Foods</span>
+    </a>
+
+    <a
+      routerLink="/admin/categories"
+      routerLinkActive="active">
+      <i class="bi bi-grid"></i>
+      <span>Categories</span>
+    </a>
+
+    <a
+      routerLink="/admin/users"
+      routerLinkActive="active">
+      <i class="bi bi-people"></i>
+      <span>Users</span>
+    </a>
+
+  </nav>
+
+  <button class="logout-btn" (click)="logout()">
+    <i class="bi bi-box-arrow-right"></i>
+    <span>Logout</span>
+  </button>
+
+</aside>
