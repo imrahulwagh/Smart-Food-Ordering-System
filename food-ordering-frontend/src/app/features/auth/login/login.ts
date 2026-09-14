@@ -84,7 +84,7 @@ export class Login {
     // =====================================================
 
     this.http.post<any>(
-      'http://localhost:8000/api/auth/login.php',
+      'https://smart-food-ordering-system.onrender.com/api/auth/login.php',
       loginData
     )
     .pipe(
@@ -187,7 +187,7 @@ export class Login {
               // ---------------------------------------------
 
               this.http.post<any>(
-                'http://localhost:8000/api/cart/add-cart.php',
+                'https://smart-food-ordering-system.onrender.com/api/cart/add-cart.php',
                 cartData
               )
               .pipe(

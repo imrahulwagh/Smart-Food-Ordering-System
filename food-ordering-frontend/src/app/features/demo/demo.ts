@@ -14,7 +14,7 @@ export class Demo implements OnInit {
 
   foods: any[] = [];
 
-  apiUrl = 'http://localhost:8000/api/foods/get-food.php';
+  apiUrl = 'https://smart-food-ordering-system.onrender.com/api/foods/get-food.php';
 
   constructor(private http: HttpClient) {}
 

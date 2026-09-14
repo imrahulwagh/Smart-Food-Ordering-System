@@ -149,7 +149,7 @@ export class Profile implements OnInit {
 
     this.http.get<any>(
 
-      `http://localhost:8000/api/profile/get-profile.php?user_id=${userId}`
+      `https://smart-food-ordering-system.onrender.com/api/profile/get-profile.php?user_id=${userId}`
 
     )
 
@@ -490,7 +490,7 @@ export class Profile implements OnInit {
 
     this.http.put<any>(
 
-      'http://localhost:8000/api/profile/update-profile.php',
+      'https://smart-food-ordering-system.onrender.com/api/profile/update-profile.php',
 
       updateData
 

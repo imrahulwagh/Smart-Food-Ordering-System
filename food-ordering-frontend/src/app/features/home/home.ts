@@ -122,7 +122,7 @@ export class Home implements OnInit {
 
     this.http.get<any>(
 
-      'http://localhost:8000/api/categories/get-categories.php'
+      'https://smart-food-ordering-system.onrender.com/api/categories/get-categories.php'
 
     )
 
@@ -206,7 +206,7 @@ export class Home implements OnInit {
 
     this.http.get<any>(
 
-      'http://localhost:8000/api/foods/get-food.php'
+      'https://smart-food-ordering-system.onrender.com/api/foods/get-food.php'
 
     )
 
@@ -402,7 +402,7 @@ export class Home implements OnInit {
 
     this.http.post<any>(
 
-      'http://localhost:8000/api/cart/add-cart.php',
+      'https://smart-food-ordering-system.onrender.com/api/cart/add-cart.php',
 
       cartData
 

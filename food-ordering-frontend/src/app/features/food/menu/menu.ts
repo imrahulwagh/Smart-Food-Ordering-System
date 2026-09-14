@@ -66,7 +66,7 @@ export class Menu implements OnInit {
     this.loadingCategories = true;
 
     this.http.get<any>(
-      'http://localhost:8000/api/categories/get-categories.php'
+      'https://smart-food-ordering-system.onrender.com/api/categories/get-categories.php'
     )
     .subscribe({
 
@@ -120,7 +120,7 @@ export class Menu implements OnInit {
     this.loadingFoods = true;
 
     this.http.get<any>(
-      'http://localhost:8000/api/foods/get-food.php'
+      'https://smart-food-ordering-system.onrender.com/api/foods/get-food.php'
     )
     .subscribe({
 
@@ -328,7 +328,7 @@ export class Menu implements OnInit {
     // CALL PHP API
 
     this.http.post<any>(
-      'http://localhost:8000/api/cart/add-cart.php',
+      'https://smart-food-ordering-system.onrender.com/api/cart/add-cart.php',
       cartData
     )
     .subscribe({

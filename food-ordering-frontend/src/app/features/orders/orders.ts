@@ -86,7 +86,7 @@ export class Orders implements OnInit {
     );
 
     this.http.post<any>(
-      'http://localhost:8000/api/orders/get-orders.php',
+      'https://smart-food-ordering-system.onrender.com/api/orders/get-orders.php',
       orderData
     )
     .pipe(timeout(10000))
@@ -185,7 +185,7 @@ export class Orders implements OnInit {
     );
 
     this.http.post<any>(
-      'http://localhost:8000/api/orders/get-orders-details.php',
+      'https://smart-food-ordering-system.onrender.com/api/orders/get-orders-details.php',
       detailsData
     )
     .pipe(timeout(10000))

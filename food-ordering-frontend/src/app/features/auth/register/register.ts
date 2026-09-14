@@ -39,7 +39,7 @@ export class Register {
 
   // PHP REGISTER API
   apiUrl =
-    'http://localhost:8000/api/auth/register.php';
+    'https://smart-food-ordering-system.onrender.com/api/auth/register.php';
 
   constructor(
     private http: HttpClient,

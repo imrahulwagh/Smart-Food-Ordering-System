@@ -76,7 +76,7 @@ export class Categories implements OnInit {
     this.errorMessage = '';
 
     this.http.get<any>(
-      'http://localhost:8000/api/categories/get-categories.php'
+      'https://smart-food-ordering-system.onrender.com/api/categories/get-categories.php'
     ).subscribe({
       next: (res) => {
         console.log('Categories API response:', res);
@@ -192,7 +192,7 @@ export class Categories implements OnInit {
       };
 
       this.http.patch<any>(
-        'http://localhost:8000/api/categories/update-category.php',
+        'https://smart-food-ordering-system.onrender.com/api/categories/update-category.php',
         data
       ).subscribe({
         next: (res) => {
@@ -229,7 +229,7 @@ export class Categories implements OnInit {
     };
 
     this.http.post<any>(
-      'http://localhost:8000/api/categories/add-category.php',
+      'https://smart-food-ordering-system.onrender.com/api/categories/add-category.php',
       data
     ).subscribe({
       next: (res) => {
@@ -272,7 +272,7 @@ export class Categories implements OnInit {
     }
 
     this.http.delete<any>(
-      'http://localhost:8000/api/categories/delete-category.php',
+      'https://smart-food-ordering-system.onrender.com/api/categories/delete-category.php',
       {
         body: {
           id: category.id

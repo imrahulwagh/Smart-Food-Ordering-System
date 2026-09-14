@@ -157,7 +157,7 @@ export class Dashboard implements OnInit {
 
 
     this.http.get<any>(
-      'http://localhost:8000/api/admin/get-dashboard.php'
+      'https://smart-food-ordering-system.onrender.com/api/admin/get-dashboard.php'
     )
 
     .subscribe({

@@ -87,7 +87,7 @@ export class Users implements OnInit {
     this.errorMessage = '';
 
     this.http.get<any>(
-      'http://localhost:8000/api/users/get-users.php'
+      'https://smart-food-ordering-system.onrender.com/api/users/get-users.php'
     ).subscribe({
 
       next: (res) => {
@@ -271,7 +271,7 @@ export class Users implements OnInit {
 
 
     this.http.patch<any>(
-      'http://localhost:8000/api/users/update-user.php',
+      'https://smart-food-ordering-system.onrender.com/api/users/update-user.php',
       data
     ).subscribe({
 
@@ -337,7 +337,7 @@ export class Users implements OnInit {
 
 
     this.http.delete<any>(
-      'http://localhost:8000/api/users/delete-user.php',
+      'https://smart-food-ordering-system.onrender.com/api/users/delete-user.php',
       {
         body: {
           id: user.id

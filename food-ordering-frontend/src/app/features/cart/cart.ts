@@ -162,7 +162,7 @@ export class Cart implements OnInit {
 
     this.http.get<any>(
 
-      `http://localhost:8000/api/cart/get-cart.php?user_id=${this.userId}`
+      `https://smart-food-ordering-system.onrender.com/api/cart/get-cart.php?user_id=${this.userId}`
 
     )
 
@@ -505,7 +505,7 @@ export class Cart implements OnInit {
 
       'DELETE',
 
-      'http://localhost:8000/api/cart/delete-cart.php',
+      'https://smart-food-ordering-system.onrender.com/api/cart/delete-cart.php',
 
       {
 

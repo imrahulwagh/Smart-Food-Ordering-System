@@ -167,7 +167,7 @@ export class Checkout implements OnInit {
 
     this.http.get<any>(
 
-      `http://localhost:8000/api/cart/get-cart.php?user_id=${this.userId}`
+      `https://smart-food-ordering-system.onrender.com/api/cart/get-cart.php?user_id=${this.userId}`
 
     )
 
@@ -453,7 +453,7 @@ export class Checkout implements OnInit {
 
     this.http.post<any>(
 
-      'http://localhost:8000/api/orders/place-order.php',
+      'https://smart-food-ordering-system.onrender.com/api/orders/place-order.php',
 
       orderData
 

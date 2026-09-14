@@ -104,7 +104,7 @@ export class AdminLogin {
     // ========================================
 
     this.http.post<any>(
-      'http://localhost:8000/api/auth/admin-login.php',
+      'https://smart-food-ordering-system.onrender.com/api/auth/admin-login.php',
       loginData
     ).subscribe({
 

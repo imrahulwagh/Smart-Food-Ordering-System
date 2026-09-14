@@ -86,7 +86,7 @@ export class Orders implements OnInit {
     this.errorMessage = '';
 
     this.http.get<any>(
-      'http://localhost:8000/api/admin/get-orders.php'
+      'https://smart-food-ordering-system.onrender.com/api/admin/get-orders.php'
     ).subscribe({
 
       next: (res) => {
@@ -199,7 +199,7 @@ export class Orders implements OnInit {
     }
 
     this.http.put<any>(
-      'http://localhost:8000/api/admin/update-order-status.php',
+      'https://smart-food-ordering-system.onrender.com/api/admin/update-order-status.php',
       {
         order_id: order.id,
         status: newStatus

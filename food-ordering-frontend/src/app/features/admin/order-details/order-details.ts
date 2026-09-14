@@ -86,7 +86,7 @@ export class OrderDetails implements OnInit {
     // order-details API requires user_id.
 
     this.http.get<any>(
-      'http://localhost:8000/api/admin/get-orders.php'
+      'https://smart-food-ordering-system.onrender.com/api/admin/get-orders.php'
     ).subscribe({
 
       next: (res) => {
@@ -151,7 +151,7 @@ export class OrderDetails implements OnInit {
     }
 
     this.http.post<any>(
-      'http://localhost:8000/api/orders/get-order-details.php',
+      'https://smart-food-ordering-system.onrender.com/api/orders/get-order-details.php',
       {
         order_id: this.order.id,
         user_id: this.order.user_id

@@ -95,7 +95,7 @@ export class Foods implements OnInit {
     this.errorMessage = '';
 
     this.http.get<any>(
-      'http://localhost:8000/api/foods/get-food.php'
+      'https://smart-food-ordering-system.onrender.com/api/foods/get-food.php'
     ).subscribe({
 
       next: (res) => {
@@ -258,7 +258,7 @@ export class Foods implements OnInit {
     if (!this.isEditMode) {
 
       this.http.post<any>(
-        'http://localhost:8000/api/foods/add-food.php',
+        'https://smart-food-ordering-system.onrender.com/api/foods/add-food.php',
 
         {
           category_id:
@@ -334,7 +334,7 @@ export class Foods implements OnInit {
 
 
     this.http.patch<any>(
-      'http://localhost:8000/api/foods/update-food.php',
+      'https://smart-food-ordering-system.onrender.com/api/foods/update-food.php',
 
       {
         id: this.selectedFoodId,
@@ -425,7 +425,7 @@ export class Foods implements OnInit {
 
 
     this.http.delete<any>(
-      'http://localhost:8000/api/foods/delete-food.php',
+      'https://smart-food-ordering-system.onrender.com/api/foods/delete-food.php',
 
       {
         body: {
