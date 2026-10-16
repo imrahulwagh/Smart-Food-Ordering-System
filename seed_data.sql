@@ -47,7 +47,7 @@ INSERT INTO public.food_items (category_id, name, description, price, image, s_a
 INSERT INTO public.food_items (category_id, name, description, price, image, s_available) VALUES
 (3, 'Hyderabadi Chicken Dum Biryani', 'Authentic long-grain basmati rice and tender chicken cuts slow-cooked on dum with saffron, mint, and fried onions.', 349.00, 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=800&auto=format&fit=crop&q=80', TRUE),
 (3, 'Royal Mutton Dum Biryani', 'Succulent baby goat meat infused with freshly ground royal spices, layered with fragrant saffron rice.', 449.00, 'https://images.unsplash.com/photo-1589302168068-964664d93dc0?w=800&auto=format&fit=crop&q=80', TRUE),
-(3, 'Paneer Tikka Dum Biryani', 'Charcoal grilled cottage cheese cubes cooked with aromatic basmati rice, caramelized onions, and mint.', 299.00, 'https://images.unsplash.com/photo-1642821373181-696a54913e9a?w=800&auto=format&fit=crop&q=80', TRUE),
+(3, 'Paneer Tikka Dum Biryani', 'Charcoal grilled cottage cheese cubes cooked with aromatic basmati rice, caramelized onions, and mint.', 299.00, 'https://images.unsplash.com/photo-1631515243349-e0cb75fb8d3a?w=800&auto=format&fit=crop&q=80', TRUE),
 (3, 'Lucknowi Shahi Veg Biryani', 'Fresh garden veggies cooked with whole spices, rose water, and kewra in classical Awadhi dum style.', 279.00, 'https://images.unsplash.com/photo-1633945274405-b6c8069047b0?w=800&auto=format&fit=crop&q=80', TRUE),
 (3, 'Spicy Egg Dum Biryani', 'Boiled fried eggs simmered in spicy biryani gravy and layered with aromatic basmati rice.', 249.00, 'https://images.unsplash.com/photo-1645177628172-a94c1f96e6db?w=800&auto=format&fit=crop&q=80', TRUE);
 

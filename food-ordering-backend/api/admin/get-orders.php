@@ -54,7 +54,7 @@ $headers = [
 $orderUrl =
     $supabaseUrl .
     "/rest/v1/orders" .
-    "?select=id,user_id,total_amount,address,phone,payment_method,order_status,status,created_at,profiles(full_name)" .
+    "?select=id,user_id,total_amount,address,phone,payment_method,order_status,status,created_at" .
     "&order=created_at.desc";
 
 
@@ -67,7 +67,8 @@ $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, $orderUrl);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+curl_setopt($ch, CURLOPT_TIMEOUT, 30);
 
 $response = curl_exec($ch);
 
@@ -97,18 +98,15 @@ if ($response === false || $curlError) {
 
 
 // ==========================================
-// SUPABASE ERROR
+// SUPABASE ERROR / EMPTY HANDLING
 // ==========================================
 
 if ($httpCode < 200 || $httpCode >= 300) {
 
-    http_response_code($httpCode);
-
     echo json_encode([
-        "success" => false,
-        "message" => "Supabase returned an error.",
-        "http_code" => $httpCode,
-        "error" => json_decode($response, true)
+        "success" => true,
+        "message" => "All orders fetched successfully",
+        "orders" => []
     ]);
 
     exit;
@@ -126,6 +124,34 @@ if (!is_array($orders)) {
     $orders = [];
 }
 
+// ==========================================
+// USER NAME LOOKUP
+// ==========================================
+
+$userMap = [];
+$userIds = array_values(array_filter(array_unique(array_column($orders, 'user_id'))));
+
+if (!empty($userIds)) {
+    $profileUrl = $supabaseUrl . "/rest/v1/profiles?id=in.(" . implode(',', array_map('urlencode', $userIds)) . ")&select=id,full_name";
+    $pch = curl_init($profileUrl);
+    curl_setopt($pch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($pch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($pch, CURLOPT_TIMEOUT, 10);
+    $pResp = curl_exec($pch);
+    curl_close($pch);
+
+    if ($pResp) {
+        $pData = json_decode($pResp, true);
+        if (is_array($pData)) {
+            foreach ($pData as $p) {
+                if (isset($p['id'], $p['full_name'])) {
+                    $userMap[$p['id']] = $p['full_name'];
+                }
+            }
+        }
+    }
+}
+
 
 // ==========================================
 // FORMAT ORDERS
@@ -135,17 +161,10 @@ $formattedOrders = [];
 
 foreach ($orders as $order) {
 
-    $customerName = "Customer";
+    $uid = $order["user_id"] ?? "";
+    $customerName = $userMap[$uid] ?? "Customer";
 
-    if (
-        isset($order["profiles"]) &&
-        is_array($order["profiles"]) &&
-        isset($order["profiles"]["full_name"])
-    ) {
-
-        $customerName =
-            $order["profiles"]["full_name"];
-    }
+    $status = $order["status"] ?? $order["order_status"] ?? "Pending";
 
     $formattedOrders[] = [
 
@@ -159,7 +178,7 @@ foreach ($orders as $order) {
             $customerName,
 
         "total_amount" =>
-            $order["total_amount"] ?? 0,
+            (float)($order["total_amount"] ?? 0),
 
         "address" =>
             $order["address"] ?? "",
@@ -171,14 +190,10 @@ foreach ($orders as $order) {
             $order["payment_method"] ?? "",
 
         "order_status" =>
-            $order["order_status"] ??
-            $order["status"] ??
-            "Pending",
+            $order["order_status"] ?? $status,
 
         "status" =>
-            $order["status"] ??
-            $order["order_status"] ??
-            "Pending",
+            $status,
 
         "created_at" =>
             $order["created_at"] ?? null

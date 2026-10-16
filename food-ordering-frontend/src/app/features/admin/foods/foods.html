@@ -180,7 +180,7 @@
               <!-- FOOD -->
               <td>
                 <div class="food-info-cell">
-                  <img *ngIf="food.image" [src]="food.image" [alt]="food.name" class="food-thumb">
+                  <img *ngIf="food.image" [src]="food.image" [alt]="food.name" class="food-thumb" (error)="food.image = ''">
                   <div class="food-placeholder" *ngIf="!food.image">
                     <i class="bi bi-egg-fried"></i>
                   </div>
