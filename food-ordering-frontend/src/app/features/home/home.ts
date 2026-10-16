@@ -5,475 +5,183 @@ import {
 } from '@angular/core';
 
 import { HttpClient } from '@angular/common/http';
-
-import {
-  RouterLink,
-  Router
-} from '@angular/router';
-
+import { RouterLink, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { environment } from '../../../environments/environment';
 
 
 @Component({
-
   selector: 'app-home',
-
   standalone: true,
-
   imports: [
     RouterLink,
     CommonModule
   ],
-
   templateUrl: './home.html',
-
   styleUrl: './home.css'
-
 })
-
 
 export class Home implements OnInit {
 
-
   // ================= CATEGORIES =================
-
   categories: any[] = [];
+  loadingCategories = true;
 
+  // ================= FOODS =================
+  foods: any[] = [];
+  loadingFoods = true;
 
-  // ================= CART =================
-
+  // ================= UI =================
   cartCount = 0;
   menuOpen = false;
 
-
-  // ================= FOODS =================
-
-  foods: any[] = [];
-
-
-  // ================= LOADING =================
-
-  loadingCategories = true;
-
-  loadingFoods = true;
-
-
   // ================= CATEGORY ICONS =================
-
-  categoryIcons: {
-    [key: string]: string
-  } = {
-
+  categoryIcons: { [key: string]: string } = {
     pizza: '🍕',
-
     burger: '🍔',
-
     biryani: '🍛',
-
     chinese: '🍜',
-
     desserts: '🍰',
-
     pasta: '🍝',
-
     drinks: '🥤',
-
-    healthy: '🥗'
-
+    healthy: '🥗',
+    sandwich: '🥪',
+    salad: '🥗',
+    soup: '🍲',
+    sushi: '🍱',
+    tacos: '🌮',
+    coffee: '☕'
   };
 
-
-  // ================= CONSTRUCTOR =================
-
   constructor(
-
     private http: HttpClient,
-
     private router: Router,
-
     private cdr: ChangeDetectorRef
-
   ) {}
 
-
-  // ================= PAGE LOAD =================
-
   ngOnInit(): void {
-
-    console.log('HOME PAGE STARTED');
-
     this.getCategories();
-
     this.getFoods();
-
   }
-
 
   // =================================================
   // CATEGORY API
   // =================================================
 
   getCategories(): void {
-
-    console.log('Fetching categories...');
-
     this.loadingCategories = true;
 
-
     this.http.get<any>(
-
-      'https://smart-food-ordering-system.onrender.com/api/categories/get-categories.php'
-
-    )
-
-    .subscribe({
-
+      `${environment.apiUrl}/categories/get-categories.php`
+    ).subscribe({
       next: (res) => {
-
-        console.log(
-          'Category API Response:',
-          res
-        );
-
-
-        if (
-          res &&
-          res.success &&
-          res.categories
-        ) {
-
-          this.categories =
-            res.categories;
-
-        }
-
-        else {
-
-          this.categories = [];
-
-        }
-
-
-        console.log(
-          'Home Categories:',
-          this.categories
-        );
-
-
+        this.categories = (res?.success && res?.categories) ? res.categories : [];
         this.loadingCategories = false;
-
-
-        // IMPORTANT
-        // Angular screen ko immediately update karega
-
         this.cdr.detectChanges();
-
       },
-
-
-      error: (err) => {
-
-        console.error(
-          'Category API Error:',
-          err
-        );
-
-
+      error: () => {
         this.categories = [];
-
         this.loadingCategories = false;
-
-
         this.cdr.detectChanges();
-
       }
-
     });
-
   }
-
 
   // =================================================
   // FOOD API
   // =================================================
 
   getFoods(): void {
-
-    console.log('Fetching foods...');
-
     this.loadingFoods = true;
 
-
     this.http.get<any>(
-
-      'https://smart-food-ordering-system.onrender.com/api/foods/get-food.php'
-
-    )
-
-    .subscribe({
-
+      `${environment.apiUrl}/foods/get-food.php`
+    ).subscribe({
       next: (res) => {
-
-        console.log(
-          'Food API Response:',
-          res
-        );
-
-
-        if (
-          res &&
-          res.success &&
-          res.foods
-        ) {
-
-          this.foods =
-            res.foods;
-
-        }
-
-        else {
-
-          this.foods = [];
-
-        }
-
-
-        console.log(
-          'Home Foods:',
-          this.foods
-        );
-
-
+        this.foods = (res?.success && res?.foods) ? res.foods : [];
         this.loadingFoods = false;
-
-
-        // IMPORTANT
-        // API response ke baad
-        // screen immediately refresh hogi
-
         this.cdr.detectChanges();
-
       },
-
-
-      error: (err) => {
-
-        console.error(
-          'Food API Error:',
-          err
-        );
-
-
+      error: () => {
         this.foods = [];
-
         this.loadingFoods = false;
-
-
         this.cdr.detectChanges();
-
       }
-
     });
-
   }
-
 
   // =================================================
   // CATEGORY ITEM COUNT
   // =================================================
 
-  getItemCount(
-    categoryId: number
-  ): number {
-
-    return this.foods.filter(
-
-      food =>
-        food.category_id === categoryId
-
-    ).length;
-
+  getItemCount(categoryId: number): number {
+    return this.foods.filter(food => food.category_id === categoryId).length;
   }
-
 
   // =================================================
   // CATEGORY ICON
   // =================================================
 
-  getIcon(
-    imageKey: string
-  ): string {
-
-    return (
-
-      this.categoryIcons[imageKey]
-
-      ||
-
-      '🍽️'
-
-    );
-
+  getIcon(imageKey: string): string {
+    if (!imageKey) return '🍽️';
+    return this.categoryIcons[imageKey.toLowerCase()] || '🍽️';
   }
-
 
   // =================================================
   // ADD TO CART
   // =================================================
 
   addToCart(food: any): void {
-
-    console.log(
-      'Add to Cart clicked:',
-      food
-    );
-
-
-    // ================= USER CHECK =================
-
-    const userId =
-      localStorage.getItem('userId');
-
-
-    console.log(
-      'Current User ID:',
-      userId
-    );
-
-
-    // =================================================
-    // USER NOT LOGGED IN
-    // =================================================
+    const userId = localStorage.getItem('userId');
 
     if (!userId) {
-
-      console.log(
-        'User is not logged in'
-      );
-
-
-      // Selected food temporarily save
-
-      localStorage.setItem(
-
-        'pendingCartItem',
-
-        JSON.stringify(food)
-
-      );
-
-
-      // Login page
-
-      this.router.navigate([
-        '/login'
-      ]);
-
-
+      localStorage.setItem('pendingCartItem', JSON.stringify(food));
+      this.router.navigate(['/login']);
       return;
-
     }
 
-
-    // =================================================
-    // USER LOGGED IN
-    // =================================================
-
     const cartData = {
-
       user_id: userId,
-
       food_id: food.id,
-
       quantity: 1,
-
       price: food.price
-
     };
 
-
-    console.log(
-      'Adding to cart:',
-      cartData
-    );
-
-
-    // ================= ADD CART API =================
-
     this.http.post<any>(
-
-      'https://smart-food-ordering-system.onrender.com/api/cart/add-cart.php',
-
+      `${environment.apiUrl}/cart/add-cart.php`,
       cartData
-
-    )
-
-    .subscribe({
-
+    ).subscribe({
       next: (res) => {
-
-        console.log(
-          'Add Cart Response:',
-          res
-        );
-
-
-        if (
-          res &&
-          res.success
-        ) {
-
-          console.log(
-            'Food added to cart successfully'
-          );
-
-
-          // Cart page
-
-          this.router.navigate([
-            '/cart'
-          ]);
-
+        if (res && res.success) {
+          this.router.navigate(['/cart']);
+        } else {
+          console.error('Could not add to cart:', res);
         }
-
-        else {
-
-          console.error(
-            'Food could not be added to cart'
-          );
-
-        }
-
       },
-
-
       error: (err) => {
-
-        console.error(
-          'Add Cart API Error:',
-          err
-        );
-
+        console.error('Add Cart API Error:', err);
       }
-
     });
-
   }
 
-
   // =================================================
-  // SEARCH
+  // UI HELPERS
   // =================================================
 
   toggleSearch(): void {
-
-    console.log(
-      'Search clicked'
-    );
-
+    console.log('Search clicked');
   }
+
   toggleMenu(): void {
-  this.menuOpen = !this.menuOpen;
-}
+    this.menuOpen = !this.menuOpen;
+  }
+
+  isLoggedIn(): boolean {
+    return !!localStorage.getItem('userId');
+  }
+
+  goToMenu(): void {
+    this.router.navigate(['/menu']);
+  }
 
 }

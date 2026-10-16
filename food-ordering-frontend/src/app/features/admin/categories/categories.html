@@ -1,322 +1,152 @@
 <div class="admin-layout">
 
   <!-- SIDEBAR -->
-
-  <aside class="sidebar">
-
-    <div class="sidebar-logo">
-      🍔 Foodie Admin
-    </div>
-
-    <nav class="sidebar-menu">
-
-      <a
-        routerLink="/admin/dashboard"
-        routerLinkActive="active">
-        📊 Dashboard
-      </a>
-
-      <a
-        routerLink="/admin/orders"
-        routerLinkActive="active">
-        📦 Orders
-      </a>
-
-      <a
-        routerLink="/admin/foods"
-        routerLinkActive="active">
-        🍕 Foods
-      </a>
-
-      <a
-        routerLink="/admin/categories"
-        routerLinkActive="active">
-        🗂️ Categories
-      </a>
-
-      <a
-        routerLink="/admin/users"
-        routerLinkActive="active">
-        👥 Users
-      </a>
-
-    </nav>
-
-    <button
-      class="logout-btn"
-      (click)="logout()">
-      🚪 Logout
-    </button>
-
-  </aside>
-
+  <app-admin-sidebar></app-admin-sidebar>
 
   <!-- MAIN CONTENT -->
+  <main class="admin-main">
 
-  <main class="main-content">
-
-    <!-- TOP HEADER -->
-
-    <header class="top-header">
-
+    <!-- HEADER -->
+    <div class="page-header">
       <div>
+        <p class="page-label">CATEGORY MANAGEMENT</p>
         <h1>Categories</h1>
-
-        <p>
-          Manage food categories
-        </p>
+        <p class="page-subtitle">Manage food categories available on Foodie</p>
       </div>
-
-      <div class="admin-info">
-
-        <span>👤 {{ adminUsername }}</span>
-
-      </div>
-
-    </header>
-
-
-    <!-- ADD BUTTON -->
-
-    <div class="page-actions">
-
-      <button
-        class="add-category-btn"
-        (click)="openAddForm()">
-
-        + Add Category
-
+      <button class="btn-primary" (click)="openAddForm()">
+        <i class="bi bi-plus-lg"></i>
+        Add Category
       </button>
-
     </div>
 
 
     <!-- ADD / EDIT FORM -->
+    <div class="form-panel" *ngIf="showCategoryForm">
 
-    <div
-      class="category-form"
-      *ngIf="showCategoryForm">
-
-      <div class="form-header">
-
-        <h2>
-          {{ isEditMode ? 'Edit Category' : 'Add Category' }}
-        </h2>
-
-        <button
-          class="close-btn"
-          (click)="closeCategoryForm()">
-
-          ✕
-
+      <div class="form-panel-header">
+        <h2>{{ isEditMode ? 'Edit Category' : 'Add Category' }}</h2>
+        <button type="button" class="btn-close-panel" (click)="closeCategoryForm()" aria-label="Close form">
+          <i class="bi bi-x-lg"></i>
         </button>
-
       </div>
-
 
       <div class="form-grid">
 
-        <div class="form-group">
-
-          <label>
-            Category Name
-          </label>
-
+        <!-- NAME -->
+        <div class="form-field">
+          <label for="cat-name">Category Name *</label>
           <input
+            id="cat-name"
             type="text"
             [(ngModel)]="categoryForm.name"
             placeholder="Enter category name">
-
         </div>
 
-
-        <div class="form-group">
-
-          <label>
-            Image
-          </label>
-
+        <!-- IMAGE KEY -->
+        <div class="form-field">
+          <label for="cat-image">Image Key</label>
           <input
+            id="cat-image"
             type="text"
             [(ngModel)]="categoryForm.image"
-            placeholder="Example: pizza">
-
+            placeholder="e.g. pizza, burger, biryani">
+          <small class="field-hint">Used to match a category icon emoji.</small>
         </div>
 
       </div>
 
-
       <div class="form-actions">
-
-        <button
-          class="cancel-btn"
-          (click)="closeCategoryForm()">
-
-          Cancel
-
-        </button>
-
-        <button
-          class="save-btn"
-          (click)="saveCategory()">
-
+        <button type="button" class="btn-secondary" (click)="closeCategoryForm()">Cancel</button>
+        <button type="button" class="btn-primary" (click)="saveCategory()">
+          <i class="bi bi-check-lg"></i>
           {{ isEditMode ? 'Update Category' : 'Save Category' }}
-
         </button>
-
       </div>
 
     </div>
 
 
     <!-- SEARCH -->
-
-    <div class="search-box">
-
+    <div class="search-bar">
+      <i class="bi bi-search"></i>
       <input
         type="text"
         [(ngModel)]="searchText"
-        placeholder="Search category...">
-
+        placeholder="Search category by name or ID...">
     </div>
 
 
     <!-- LOADING -->
-
-    <div
-      class="message-box"
-      *ngIf="loading">
-
-      Loading categories...
-
+    <div class="state-box loading-box" *ngIf="loading">
+      <div class="spinner"></div>
+      <p>Loading categories...</p>
     </div>
-
 
     <!-- ERROR -->
+    <div class="state-box error-box" *ngIf="!loading && errorMessage">
+      <i class="bi bi-exclamation-circle"></i>
+      <p>{{ errorMessage }}</p>
+      <button class="btn-secondary" (click)="getCategories()">Retry</button>
+    </div>
 
-    <div
-      class="error-box"
-      *ngIf="!loading && errorMessage">
-
-      {{ errorMessage }}
-
+    <!-- EMPTY -->
+    <div class="state-box empty-box" *ngIf="!loading && !errorMessage && filteredCategories.length === 0">
+      <i class="bi bi-grid-3x3-gap"></i>
+      <h3>No Categories Found</h3>
+      <p *ngIf="searchText">No results for "{{ searchText }}"</p>
+      <p *ngIf="!searchText">Add your first category to get started.</p>
     </div>
 
 
-    <!-- CATEGORY TABLE -->
+    <!-- CATEGORIES TABLE -->
+    <div class="table-card" *ngIf="!loading && !errorMessage && filteredCategories.length > 0">
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Category</th>
+              <th>Image Key</th>
+              <th>Food Count</th>
+              <th>Created At</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let category of filteredCategories">
 
-    <div
-      class="table-container"
-      *ngIf="!loading && !errorMessage">
+              <td><span class="id-badge">#{{ category.id }}</span></td>
 
-      <table>
+              <td><strong>{{ category.name }}</strong></td>
 
-        <thead>
+              <td>
+                <span class="image-key-badge" *ngIf="category.image">{{ category.image }}</span>
+                <span class="text-muted" *ngIf="!category.image">—</span>
+              </td>
 
-          <tr>
+              <td>
+                <span class="count-badge">{{ category.count || 0 }} foods</span>
+              </td>
 
-            <th>ID</th>
+              <td>
+                <span class="text-muted">{{ category.created_at || '—' }}</span>
+              </td>
 
-            <th>Category</th>
+              <td>
+                <div class="action-btns">
+                  <button class="btn-icon btn-edit" title="Edit Category" (click)="openEditForm(category)">
+                    <i class="bi bi-pencil"></i>
+                  </button>
+                  <button class="btn-icon btn-delete" title="Delete Category" (click)="deleteCategory(category)">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+              </td>
 
-            <th>Image</th>
-
-            <th>Food Count</th>
-
-            <th>Created At</th>
-
-            <th>Action</th>
-
-          </tr>
-
-        </thead>
-
-
-        <tbody>
-
-          <tr
-            *ngFor="let category of filteredCategories">
-
-            <td>
-              {{ category.id }}
-            </td>
-
-            <td>
-
-              <strong>
-                {{ category.name }}
-              </strong>
-
-            </td>
-
-            <td>
-
-              <span class="image-key">
-                {{ category.image || '-' }}
-              </span>
-
-            </td>
-
-            <td>
-
-              <span class="food-count">
-                {{ category.count || 0 }}
-              </span>
-
-            </td>
-
-            <td>
-
-              {{ category.created_at || '-' }}
-
-            </td>
-
-            <td>
-
-              <div class="action-buttons">
-
-                <button
-                  class="edit-btn"
-                  (click)="openEditForm(category)">
-
-                  Edit
-
-                </button>
-
-                <button
-                  class="delete-btn"
-                  (click)="deleteCategory(category)">
-
-                  Delete
-
-                </button>
-
-              </div>
-
-            </td>
-
-          </tr>
-
-
-          <!-- NO DATA -->
-
-          <tr
-            *ngIf="filteredCategories.length === 0">
-
-            <td
-              colspan="6"
-              class="no-data">
-
-              No categories found.
-
-            </td>
-
-          </tr>
-
-        </tbody>
-
-      </table>
-
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
   </main>

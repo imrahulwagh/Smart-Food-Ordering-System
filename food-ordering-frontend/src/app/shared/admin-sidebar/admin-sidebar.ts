@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-admin-sidebar',
@@ -11,26 +12,20 @@ import { Router, RouterLink, RouterLinkActive } from '@angular/router';
   templateUrl: './admin-sidebar.html',
   styleUrl: './admin-sidebar.css'
 })
-export class AdminSidebar {
+export class AdminSidebar implements OnInit {
 
   adminUsername: string = 'Admin';
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private auth: AuthService
+  ) {}
 
   ngOnInit(): void {
-    const savedUsername = localStorage.getItem('adminUsername');
-
-    if (savedUsername) {
-      this.adminUsername = savedUsername;
-    }
+    this.adminUsername = this.auth.getAdminUsername();
   }
 
   logout(): void {
-    localStorage.removeItem('adminId');
-    localStorage.removeItem('adminUsername');
-    localStorage.removeItem('adminEmail');
-    localStorage.removeItem('adminLoggedIn');
-
-    this.router.navigate(['/admin-login']);
+    this.auth.logoutAdmin();
   }
 }

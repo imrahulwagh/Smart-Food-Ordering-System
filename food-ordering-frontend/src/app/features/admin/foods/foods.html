@@ -1,468 +1,216 @@
-<div class="admin-page">
+<div class="admin-layout">
 
-  <!-- ================= SIDEBAR ================= -->
+  <!-- SIDEBAR -->
+  <app-admin-sidebar></app-admin-sidebar>
 
-  <aside class="sidebar">
-
-    <div class="logo">
-      🍔 Foodie
-    </div>
-
-    <div class="admin-profile">
-
-      <div class="admin-icon">
-        👤
-      </div>
-
-      <div>
-        <h4>{{ adminUsername }}</h4>
-        <p>Administrator</p>
-      </div>
-
-    </div>
-
-    <nav class="menu">
-
-      <a
-        routerLink="/admin/dashboard"
-        routerLinkActive="active">
-        📊 Dashboard
-      </a>
-
-      <a
-        routerLink="/admin/orders"
-        routerLinkActive="active">
-        🛒 Orders
-      </a>
-
-      <a
-        routerLink="/admin/foods"
-        routerLinkActive="active">
-        🍔 Foods
-      </a>
-
-      <a
-        routerLink="/admin/categories"
-        routerLinkActive="active">
-        📂 Categories
-      </a>
-
-      <a
-        routerLink="/admin/users"
-        routerLinkActive="active">
-        👥 Users
-      </a>
-
-    </nav>
-
-    <button
-      class="logout-btn"
-      (click)="logout()">
-      🚪 Logout
-    </button>
-
-  </aside>
-
-
-  <!-- ================= MAIN CONTENT ================= -->
-
-  <main class="main-content">
+  <!-- MAIN CONTENT -->
+  <main class="admin-main">
 
     <!-- HEADER -->
-
-    <div class="top-header">
-
+    <div class="page-header">
       <div>
+        <p class="page-label">FOOD MANAGEMENT</p>
         <h1>Foods</h1>
-
-        <p>
-          Manage food items available on Foodie
-        </p>
+        <p class="page-subtitle">Manage food items available on Foodie</p>
       </div>
-
-      <button
-        class="add-food-btn"
-        (click)="openAddForm()">
-
-        + Add Food
-
+      <button class="btn-primary" (click)="openAddForm()">
+        <i class="bi bi-plus-lg"></i>
+        Add Food
       </button>
-
     </div>
 
 
-    <!-- ================= ADD / EDIT FORM ================= -->
+    <!-- ADD / EDIT FORM -->
+    <div class="form-panel" *ngIf="showFoodForm">
 
-    <div
-      class="add-food-form"
-      *ngIf="showFoodForm">
-
-      <div class="form-header">
-
-        <h2>
-          {{ isEditMode ? 'Edit Food' : 'Add New Food' }}
-        </h2>
-
-        <button
-          type="button"
-          class="close-btn"
-          (click)="closeFoodForm()">
-
-          ✕
-
+      <div class="form-panel-header">
+        <h2>{{ isEditMode ? 'Edit Food' : 'Add New Food' }}</h2>
+        <button type="button" class="btn-close-panel" (click)="closeFoodForm()" aria-label="Close form">
+          <i class="bi bi-x-lg"></i>
         </button>
-
       </div>
-
 
       <div class="form-grid">
 
-        <!-- CATEGORY -->
-
-        <div class="form-group">
-
-          <label>
-            Category ID *
-          </label>
-
+        <!-- CATEGORY ID -->
+        <div class="form-field">
+          <label for="food-category-id">Category ID *</label>
           <input
+            id="food-category-id"
             type="number"
             [(ngModel)]="foodForm.category_id"
-            placeholder="Enter category ID">
-
+            placeholder="Enter category ID"
+            min="1">
         </div>
 
-
         <!-- NAME -->
-
-        <div class="form-group">
-
-          <label>
-            Food Name *
-          </label>
-
+        <div class="form-field">
+          <label for="food-name">Food Name *</label>
           <input
+            id="food-name"
             type="text"
             [(ngModel)]="foodForm.name"
             placeholder="Enter food name">
-
         </div>
-
 
         <!-- DESCRIPTION -->
-
-        <div class="form-group full-width">
-
-          <label>
-            Description
-          </label>
-
+        <div class="form-field full-width">
+          <label for="food-description">Description</label>
           <textarea
+            id="food-description"
             [(ngModel)]="foodForm.description"
-            placeholder="Enter food description">
+            placeholder="Enter food description"
+            rows="3">
           </textarea>
-
         </div>
-
 
         <!-- PRICE -->
-
-        <div class="form-group">
-
-          <label>
-            Price *
-          </label>
-
+        <div class="form-field">
+          <label for="food-price">Price (₹) *</label>
           <input
+            id="food-price"
             type="number"
             [(ngModel)]="foodForm.price"
-            placeholder="Enter price">
-
+            placeholder="Enter price"
+            min="0">
         </div>
 
-
         <!-- IMAGE -->
-
-        <div class="form-group">
-
-          <label>
-            Image URL
-          </label>
-
+        <div class="form-field">
+          <label for="food-image">Image URL</label>
           <input
+            id="food-image"
             type="text"
             [(ngModel)]="foodForm.image"
             placeholder="Paste image URL">
-
         </div>
 
-
         <!-- STATUS -->
-
-        <div class="form-group">
-
-          <label>
-            Availability
-          </label>
-
-          <select
-            [(ngModel)]="foodForm.s_available">
-
-            <option [ngValue]="true">
-              Available
-            </option>
-
-            <option [ngValue]="false">
-              Unavailable
-            </option>
-
+        <div class="form-field">
+          <label for="food-status">Availability</label>
+          <select id="food-status" [(ngModel)]="foodForm.s_available">
+            <option [ngValue]="true">Available</option>
+            <option [ngValue]="false">Unavailable</option>
           </select>
-
         </div>
 
       </div>
 
-
-      <!-- FORM BUTTONS -->
-
       <div class="form-actions">
-
-        <button
-          type="button"
-          class="cancel-btn"
-          (click)="closeFoodForm()">
-
-          Cancel
-
-        </button>
-
-        <button
-          type="button"
-          class="save-btn"
-          (click)="saveFood()">
-
+        <button type="button" class="btn-secondary" (click)="closeFoodForm()">Cancel</button>
+        <button type="button" class="btn-primary" (click)="saveFood()">
+          <i class="bi bi-check-lg"></i>
           {{ isEditMode ? 'Update Food' : 'Add Food' }}
-
         </button>
-
       </div>
 
     </div>
 
 
-    <!-- ================= SEARCH ================= -->
-
-    <div class="search-box">
-
-      <span>
-        🔍
-      </span>
-
+    <!-- SEARCH -->
+    <div class="search-bar">
+      <i class="bi bi-search"></i>
       <input
         type="text"
         [(ngModel)]="searchText"
-        placeholder="Search food...">
-
+        placeholder="Search food by name or description...">
     </div>
 
 
-    <!-- ================= LOADING ================= -->
+    <!-- LOADING -->
+    <div class="state-box loading-box" *ngIf="loading">
+      <div class="spinner"></div>
+      <p>Loading foods...</p>
+    </div>
 
-    <div
-      class="message-box"
-      *ngIf="loading">
+    <!-- ERROR -->
+    <div class="state-box error-box" *ngIf="!loading && errorMessage">
+      <i class="bi bi-exclamation-circle"></i>
+      <p>{{ errorMessage }}</p>
+      <button class="btn-secondary" (click)="getFoods()">Retry</button>
+    </div>
 
-      Loading foods...
-
+    <!-- NO FOOD -->
+    <div class="state-box empty-box" *ngIf="!loading && !errorMessage && filteredFoods.length === 0">
+      <i class="bi bi-egg-fried"></i>
+      <h3>No Foods Found</h3>
+      <p *ngIf="searchText">No results for "{{ searchText }}"</p>
+      <p *ngIf="!searchText">Add your first food item to get started.</p>
     </div>
 
 
-    <!-- ================= ERROR ================= -->
-
-    <div
-      class="message-box error"
-      *ngIf="!loading && errorMessage">
-
-      {{ errorMessage }}
-
-    </div>
-
-
-    <!-- ================= NO FOOD ================= -->
-
-    <div
-      class="message-box"
-      *ngIf="
-        !loading &&
-        !errorMessage &&
-        filteredFoods.length === 0
-      ">
-
-      No food found.
-
-    </div>
-
-
-    <!-- ================= FOOD TABLE ================= -->
-
-    <div
-      class="food-card"
-      *ngIf="
-        !loading &&
-        !errorMessage &&
-        filteredFoods.length > 0
-      ">
-
+    <!-- FOODS TABLE -->
+    <div class="table-card" *ngIf="!loading && !errorMessage && filteredFoods.length > 0">
       <div class="table-wrapper">
-
         <table>
-
           <thead>
-
             <tr>
-
               <th>ID</th>
-
               <th>Food</th>
-
               <th>Description</th>
-
               <th>Price</th>
-
               <th>Category ID</th>
-
               <th>Status</th>
-
-              <th>Action</th>
-
+              <th>Actions</th>
             </tr>
-
           </thead>
-
-
           <tbody>
-
-            <tr
-              *ngFor="let food of filteredFoods">
+            <tr *ngFor="let food of filteredFoods">
 
               <!-- ID -->
-
-              <td>
-                {{ food.id }}
-              </td>
-
+              <td><span class="id-badge">#{{ food.id }}</span></td>
 
               <!-- FOOD -->
-
               <td>
-
-                <div class="food-info">
-
-                  <img
-                    *ngIf="food.image"
-                    [src]="food.image"
-                    [alt]="food.name">
-
-                  <div>
-
-                    <strong>
-                      {{ food.name }}
-                    </strong>
-
+                <div class="food-info-cell">
+                  <img *ngIf="food.image" [src]="food.image" [alt]="food.name" class="food-thumb">
+                  <div class="food-placeholder" *ngIf="!food.image">
+                    <i class="bi bi-egg-fried"></i>
                   </div>
-
+                  <strong>{{ food.name }}</strong>
                 </div>
-
               </td>
-
 
               <!-- DESCRIPTION -->
-
               <td>
-
-                <span class="description">
-
-                  {{ food.description || '-' }}
-
-                </span>
-
+                <span class="text-muted truncate">{{ food.description || '—' }}</span>
               </td>
-
 
               <!-- PRICE -->
-
-              <td>
-
-                <strong>
-
-                  {{ formatCurrency(food.price) }}
-
-                </strong>
-
-              </td>
-
+              <td><strong class="price-text">{{ formatCurrency(food.price) }}</strong></td>
 
               <!-- CATEGORY -->
-
-              <td>
-
-                {{ food.category_id || '-' }}
-
-              </td>
-
+              <td>{{ food.category_id || '—' }}</td>
 
               <!-- STATUS -->
-
               <td>
-
-                <span
-                  class="status"
-                  [ngClass]="getAvailabilityClass(food)">
-
+                <span class="status-badge" [ngClass]="getAvailabilityClass(food)">
                   {{ getAvailability(food) }}
-
                 </span>
-
               </td>
 
-
               <!-- ACTIONS -->
-
               <td>
-
-                <div class="actions">
-
+                <div class="action-btns">
                   <button
-                    class="edit-btn"
+                    class="btn-icon btn-edit"
                     title="Edit Food"
                     (click)="openEditForm(food)">
-
-                    ✏️
-
+                    <i class="bi bi-pencil"></i>
                   </button>
-
-
                   <button
-                    class="delete-btn"
+                    class="btn-icon btn-delete"
                     title="Delete Food"
                     (click)="deleteFood(food)">
-
-                    🗑️
-
+                    <i class="bi bi-trash"></i>
                   </button>
-
                 </div>
-
               </td>
 
             </tr>
-
           </tbody>
-
         </table>
-
       </div>
-
     </div>
 
   </main>

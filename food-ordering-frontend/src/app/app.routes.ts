@@ -1,17 +1,5 @@
 import { Routes } from '@angular/router';
-import { Home } from './features/home/home';
-import { Login } from './features/auth/login/login';
-import { Demo } from './features/demo/demo';
-import { Checkout } from './features/checkout/checkout';
-import { Orders as CustomerOrders } from './features/orders/orders';
-import { AdminLogin } from './features/auth/admin-login/admin-login';
-import { Dashboard } from './features/admin/dashboard/dashboard';
-import { Orders as AdminOrders } from './features/admin/orders/orders';
-import { OrderDetails } from './features/admin/order-details/order-details';
-import { Foods } from './features/admin/foods/foods';
-import { Categories } from './features/admin/categories/categories';
-import { Users } from './features/admin/users/users';
-
+import { authGuard, adminGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -19,6 +7,11 @@ export const routes: Routes = [
     redirectTo: 'home',
     pathMatch: 'full'
   },
+
+  // ==========================================
+  // PUBLIC ROUTES
+  // ==========================================
+
   {
     path: 'home',
     loadComponent: () =>
@@ -26,101 +19,131 @@ export const routes: Routes = [
   },
   {
     path: 'login',
-    component: Login
+    loadComponent: () =>
+      import('./features/auth/login/login').then(m => m.Login)
   },
   {
-  path: 'register',
-  loadComponent: () =>
-    import('./features/auth/register/register')
-      .then(m => m.Register)
-},
-{
-  path: 'forgot-password',
-  loadComponent: () =>
-    import('./features/auth/forgot/forgotPassword')
-      .then(m => m.ForgotPassword)
-}
-,
-{
-  path: 'menu',
-  loadComponent: () =>
-    import('./features/food/menu/menu')
-      .then(m => m.Menu)
-},
-{
-  path: 'cart',
-  loadComponent: () =>
-    import('./features/cart/cart')
-      .then(m => m.Cart)
-}
-,{
-  path: 'restaurants',
-  loadComponent: () =>
-    import('./features/restaurants/restaurants')
-      .then(m => m.Restaurants)
-},
-{
-  path: 'about',
-  loadComponent: () =>
-    import('./features/about/about')
-      .then(m => m.About)
-},
-{
-  path: 'contact',
-  loadComponent: () =>
-    import('./features/contact/contact')
-      .then(m => m.Contact)
-},
-{
-  path: 'profile',
-  loadComponent: () =>
-    import('./features/profile/profile')
-      .then(m => m.Profile)
-},
+    path: 'register',
+    loadComponent: () =>
+      import('./features/auth/register/register').then(m => m.Register)
+  },
+  {
+    path: 'forgot-password',
+    loadComponent: () =>
+      import('./features/auth/forgot/forgotPassword').then(m => m.ForgotPassword)
+  },
+  {
+    path: 'menu',
+    loadComponent: () =>
+      import('./features/food/menu/menu').then(m => m.Menu)
+  },
+  {
+    path: 'restaurants',
+    loadComponent: () =>
+      import('./features/restaurants/restaurants').then(m => m.Restaurants)
+  },
+  {
+    path: 'about',
+    loadComponent: () =>
+      import('./features/about/about').then(m => m.About)
+  },
+  {
+    path: 'contact',
+    loadComponent: () =>
+      import('./features/contact/contact').then(m => m.Contact)
+  },
 
+  // ==========================================
+  // CUSTOMER PROTECTED ROUTES
+  // ==========================================
 
-{
+  {
+    path: 'cart',
+    loadComponent: () =>
+      import('./features/cart/cart').then(m => m.Cart),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'checkout',
+    loadComponent: () =>
+      import('./features/checkout/checkout').then(m => m.Checkout),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'orders',
+    loadComponent: () =>
+      import('./features/orders/orders').then(m => m.Orders),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'profile',
+    loadComponent: () =>
+      import('./features/profile/profile').then(m => m.Profile),
+    canActivate: [authGuard]
+  },
+
+  // ==========================================
+  // ADMIN AUTH
+  // ==========================================
+
+  {
+    path: 'admin-login',
+    loadComponent: () =>
+      import('./features/auth/admin-login/admin-login').then(m => m.AdminLogin)
+  },
+
+  // ==========================================
+  // ADMIN PROTECTED ROUTES
+  // ==========================================
+
+  {
+    path: 'admin/dashboard',
+    loadComponent: () =>
+      import('./features/admin/dashboard/dashboard').then(m => m.Dashboard),
+    canActivate: [adminGuard]
+  },
+  {
+    path: 'admin/orders',
+    loadComponent: () =>
+      import('./features/admin/orders/orders').then(m => m.Orders),
+    canActivate: [adminGuard]
+  },
+  {
+    path: 'admin/orders/:id',
+    loadComponent: () =>
+      import('./features/admin/order-details/order-details').then(m => m.OrderDetails),
+    canActivate: [adminGuard]
+  },
+  {
+    path: 'admin/foods',
+    loadComponent: () =>
+      import('./features/admin/foods/foods').then(m => m.Foods),
+    canActivate: [adminGuard]
+  },
+  {
+    path: 'admin/categories',
+    loadComponent: () =>
+      import('./features/admin/categories/categories').then(m => m.Categories),
+    canActivate: [adminGuard]
+  },
+  {
+    path: 'admin/users',
+    loadComponent: () =>
+      import('./features/admin/users/users').then(m => m.Users),
+    canActivate: [adminGuard]
+  },
+
+  // ==========================================
+  // DEMO / 404
+  // ==========================================
+
+  {
     path: 'demo',
-    component: Demo
+    loadComponent: () =>
+      import('./features/demo/demo').then(m => m.Demo)
+  },
+  {
+    path: '**',
+    redirectTo: 'home'
   }
-,
-{
-  path: 'checkout',
-  component: Checkout
-}
-,
-{
-  path: 'orders',
-  component: CustomerOrders
-}
-,
-{ path: 'admin-login',
-   component: AdminLogin
-  
-},
-{
-  path: 'admin/dashboard',
-  component: Dashboard
-},
-{
-  path: 'admin/orders',
-  component: AdminOrders
-}
-,
-{ 
-  path: 'admin/orders/:id'
-  , component: OrderDetails
-},
-{ 
-  path: 'admin/foods', 
-  component: Foods 
-},
-{
-  path: 'admin/categories',
-  component: Categories
-},
-{
-  path: 'admin/users',
-  component: Users
-}
 ];

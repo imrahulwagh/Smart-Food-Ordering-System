@@ -3,653 +3,184 @@ import {
   OnInit,
   ChangeDetectorRef
 } from '@angular/core';
-
 import { HttpClient } from '@angular/common/http';
-
 import { RouterLink } from '@angular/router';
-
 import { CommonModule } from '@angular/common';
-
 import { timeout } from 'rxjs/operators';
-
+import { environment } from '../../../environments/environment';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
-
   selector: 'app-cart',
-
   standalone: true,
-
   imports: [
     RouterLink,
     CommonModule
   ],
-
   templateUrl: './cart.html',
-
   styleUrl: './cart.css'
-
 })
-
-
 export class Cart implements OnInit {
 
-
-  // =====================================================
-  // CART ITEMS
-  // =====================================================
-
+  // Cart items
   cartItems: any[] = [];
-
-
-  // =====================================================
-  // CART SUBTOTAL
-  // =====================================================
-
   cartTotal = 0;
-
-
-  // =====================================================
-  // LOADING
-  // =====================================================
-
   loadingCart = true;
-
-
-  // =====================================================
-  // LOGGED-IN USER ID
-  // =====================================================
-
   userId = '';
-
-
-  // =====================================================
-  // DELIVERY FEE
-  // =====================================================
-
   deliveryFee = 40;
-
-
-  // =====================================================
-  // TAX
-  // =====================================================
-
   tax = 22;
 
-
-  // =====================================================
-  // CONSTRUCTOR
-  // =====================================================
-
   constructor(
-
     private http: HttpClient,
-
-    private cdr: ChangeDetectorRef
-
+    private cdr: ChangeDetectorRef,
+    private authService: AuthService
   ) {}
 
-
-  // =====================================================
-  // COMPONENT LOAD
-  // =====================================================
-
   ngOnInit(): void {
+    const savedUserId = this.authService.getUserId();
 
-    // LocalStorage se actual logged-in user ID lena
-
-    const savedUserId =
-      localStorage.getItem('userId');
-
-
-    console.log(
-      'Logged-in User ID:',
-      savedUserId
-    );
-
-
-    // ===================================================
-    // USER LOGIN NAHI HAI
-    // ===================================================
+    console.log('Logged-in User ID:', savedUserId);
 
     if (!savedUserId) {
-
-      console.log(
-        'User is not logged in'
-      );
-
-
+      console.log('User is not logged in');
       this.cartItems = [];
-
       this.cartTotal = 0;
-
       this.loadingCart = false;
-
-
-      // Angular UI update
-
       this.cdr.detectChanges();
-
-
       return;
     }
 
-
-    // ===================================================
-    // ACTUAL USER UUID SAVE
-    // ===================================================
-
-    this.userId =
-      savedUserId;
-
-
-    // ===================================================
-    // CART DATABASE SE LOAD
-    // ===================================================
-
+    this.userId = savedUserId;
     this.getCart();
-
   }
 
-
-  // =====================================================
-  // GET CART FROM BACKEND
-  // =====================================================
-
+  // Load cart items from backend
   getCart(): void {
-
     this.loadingCart = true;
 
-
     this.http.get<any>(
-
-      `https://smart-food-ordering-system.onrender.com/api/cart/get-cart.php?user_id=${this.userId}`
-
+      `${environment.apiUrl}/cart/get-cart.php?user_id=${this.userId}`
     )
-
-    .pipe(
-
-      timeout(10000)
-
-    )
-
+    .pipe(timeout(15000))
     .subscribe({
-
-      // =================================================
-      // SUCCESS
-      // =================================================
-
       next: (res) => {
+        console.log('Cart API Response:', res);
 
-        console.log(
-          'Cart API Response:',
-          res
-        );
-
-
-        // =================================================
-        // CART DATA
-        // =================================================
-
-        if (
-
-          res &&
-
-          res.success
-
-        ) {
-
-          this.cartItems =
-            res.cart || [];
-
-
-          this.cartTotal =
-            Number(
-              res.cart_total
-            ) || 0;
-
-        }
-
-        else {
-
+        if (res && res.success) {
+          this.cartItems = res.cart || [];
+          this.cartTotal = Number(res.cart_total) || 0;
+        } else {
           this.cartItems = [];
-
           this.cartTotal = 0;
-
         }
 
-
-        // =================================================
-        // CONSOLE
-        // =================================================
-
-        console.log(
-          'Cart Items:',
-          this.cartItems
-        );
-
-
-        console.log(
-          'Cart Subtotal:',
-          this.cartTotal
-        );
-
-
-        // =================================================
-        // LOADING COMPLETE
-        // =================================================
-
         this.loadingCart = false;
-
-
-        // =================================================
-        // IMPORTANT FIX
-        // =================================================
-        // API se data aane ke turant baad
-        // Angular screen update karega.
-
         this.cdr.detectChanges();
-
       },
-
-
-      // =================================================
-      // ERROR
-      // =================================================
-
       error: (err) => {
-
-        console.error(
-          'Cart API Error:',
-          err
-        );
-
-
+        console.error('Cart API Error:', err);
         this.cartItems = [];
-
         this.cartTotal = 0;
-
-
         this.loadingCart = false;
-
-
-        // =================================================
-        // IMPORTANT FIX
-        // =================================================
-
         this.cdr.detectChanges();
-
       }
-
     });
-
   }
 
-
-  // =====================================================
-  // INCREASE QUANTITY
-  // =====================================================
-
-  increaseQuantity(
-    item: any
-  ): void {
-
-    item.quantity++;
-
-
+  // Sync quantity changes with backend
+  updateQuantity(item: any, newQty: number): void {
+    if (newQty < 1) return;
+    const oldQty = item.quantity;
+    item.quantity = newQty;
     this.calculateTotal();
 
+    if (!item.cart_id) return;
 
-    console.log(
-
-      item.name,
-
-      'Quantity:',
-
-      item.quantity
-
-    );
-
+    this.http.post<any>(`${environment.apiUrl}/cart/update-cart.php`, {
+      cart_id: item.cart_id,
+      quantity: newQty
+    })
+    .pipe(timeout(10000))
+    .subscribe({
+      next: (res) => {
+        console.log('Cart quantity updated in backend:', res);
+      },
+      error: (err) => {
+        console.error('Failed to sync cart quantity with backend:', err);
+        // Rollback on network failure
+        item.quantity = oldQty;
+        this.calculateTotal();
+      }
+    });
   }
 
+  increaseQuantity(item: any): void {
+    this.updateQuantity(item, Number(item.quantity) + 1);
+  }
 
-  // =====================================================
-  // DECREASE QUANTITY
-  // =====================================================
-
-  decreaseQuantity(
-    item: any
-  ): void {
-
-    if (
-      item.quantity > 1
-    ) {
-
-      item.quantity--;
-
-
-      this.calculateTotal();
-
-
-      console.log(
-
-        item.name,
-
-        'Quantity:',
-
-        item.quantity
-
-      );
-
+  decreaseQuantity(item: any): void {
+    if (item.quantity > 1) {
+      this.updateQuantity(item, Number(item.quantity) - 1);
     }
-
   }
-
-
-  // =====================================================
-  // CALCULATE CART TOTAL
-  // =====================================================
 
   calculateTotal(): void {
-
     let total = 0;
-
-
-    this.cartItems.forEach(
-
-      item => {
-
-        const price =
-          Number(
-            item.price
-          );
-
-
-        const quantity =
-          Number(
-            item.quantity
-          );
-
-
-        item.item_total =
-          price * quantity;
-
-
-        total +=
-          item.item_total;
-
-      }
-
-    );
-
-
-    this.cartTotal =
-      total;
-
-
-    console.log(
-      'Updated Cart Subtotal:',
-      this.cartTotal
-    );
-
-
-    // UI update
-
-    this.cdr.detectChanges();
-
-  }
-
-
-  // =====================================================
-  // FINAL TOTAL
-  // =====================================================
-
-  getFinalTotal(): number {
-
-    return (
-
-      this.cartTotal +
-
-      this.deliveryFee +
-
-      this.tax
-
-    );
-
-  }
-
-
-  // =====================================================
-  // REMOVE ITEM FROM CART
-  // =====================================================
-
-  removeItem(
-    item: any
-  ): void {
-
-    console.log(
-      'Delete button clicked:',
-      item
-    );
-
-
-    // ===================================================
-    // 1. CHECK CART ID
-    // ===================================================
-
-    if (
-
-      !item ||
-
-      !item.cart_id
-
-    ) {
-
-      console.error(
-        'Cart ID not found'
-      );
-
-
-      alert(
-        'Cart item ID not found.'
-      );
-
-
-      return;
-
-    }
-
-
-    // ===================================================
-    // 2. CONFIRM DELETE
-    // ===================================================
-
-    const confirmDelete =
-
-      confirm(
-
-        `Remove ${item.name} from your cart?`
-
-      );
-
-
-    if (!confirmDelete) {
-
-      return;
-
-    }
-
-
-    // ===================================================
-    // 3. DELETE DATA
-    // ===================================================
-
-    const deleteData = {
-
-      cart_id:
-        item.cart_id
-
-    };
-
-
-    console.log(
-      'Deleting cart item:',
-      deleteData
-    );
-
-
-    // ===================================================
-    // 4. DELETE API
-    // ===================================================
-
-    this.http.request<any>(
-
-      'DELETE',
-
-      'https://smart-food-ordering-system.onrender.com/api/cart/delete-cart.php',
-
-      {
-
-        body: deleteData
-
-      }
-
-    )
-
-    .pipe(
-
-      timeout(10000)
-
-    )
-
-    .subscribe({
-
-      // =================================================
-      // 5. DELETE SUCCESS
-      // =================================================
-
-      next: (res) => {
-
-        console.log(
-          'Delete Cart Response:',
-          res
-        );
-
-
-        // =================================================
-        // API SUCCESS
-        // =================================================
-
-        if (
-
-          res &&
-
-          res.success
-
-        ) {
-
-          console.log(
-            'Cart item deleted from database'
-          );
-
-
-          // =============================================
-          // REMOVE SAME ITEM FROM FRONTEND
-          // =============================================
-
-          const index =
-
-            this.cartItems.findIndex(
-
-              cartItem =>
-
-                cartItem.cart_id ===
-                item.cart_id
-
-            );
-
-
-          if (
-            index !== -1
-          ) {
-
-            this.cartItems.splice(
-
-              index,
-
-              1
-
-            );
-
-          }
-
-
-          // =============================================
-          // UPDATE TOTAL
-          // =============================================
-
-          this.calculateTotal();
-
-
-          console.log(
-            'Cart item removed from frontend'
-          );
-
-
-          console.log(
-            'Remaining Cart Items:',
-            this.cartItems
-          );
-
-
-          // =============================================
-          // IMPORTANT
-          // =============================================
-
-          this.cdr.detectChanges();
-
-        }
-
-        else {
-
-          // =============================================
-          // DELETE FAILED
-          // =============================================
-
-          console.error(
-            'Delete failed:',
-            res
-          );
-
-
-          alert(
-            'Could not remove item from cart.'
-          );
-
-        }
-
-      },
-
-
-      // =================================================
-      // 8. API ERROR
-      // =================================================
-
-      error: (err) => {
-
-        console.error(
-          'Delete Cart API Error:',
-          err
-        );
-
-
-        alert(
-          'Something went wrong while removing the item.'
-        );
-
-      }
-
+    this.cartItems.forEach(item => {
+      const price = Number(item.price);
+      const quantity = Number(item.quantity);
+      item.item_total = price * quantity;
+      total += item.item_total;
     });
 
+    this.cartTotal = total;
+    this.cdr.detectChanges();
   }
 
+  getFinalTotal(): number {
+    return this.cartTotal + this.deliveryFee + this.tax;
+  }
+
+  removeItem(item: any): void {
+    if (!item || !item.cart_id) {
+      alert('Cart item ID not found.');
+      return;
+    }
+
+    const confirmDelete = confirm(`Remove ${item.name} from your cart?`);
+    if (!confirmDelete) return;
+
+    const deleteData = {
+      cart_id: item.cart_id
+    };
+
+    this.http.request<any>(
+      'DELETE',
+      `${environment.apiUrl}/cart/delete-cart.php`,
+      { body: deleteData }
+    )
+    .pipe(timeout(10000))
+    .subscribe({
+      next: (res) => {
+        if (res && res.success) {
+          const index = this.cartItems.findIndex(
+            cartItem => cartItem.cart_id === item.cart_id
+          );
+
+          if (index !== -1) {
+            this.cartItems.splice(index, 1);
+          }
+
+          this.calculateTotal();
+          this.cdr.detectChanges();
+        } else {
+          alert('Could not remove item from cart.');
+        }
+      },
+      error: (err) => {
+        console.error('Delete Cart API Error:', err);
+        alert('Something went wrong while removing the item.');
+      }
+    });
+  }
 }

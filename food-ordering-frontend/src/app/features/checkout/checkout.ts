@@ -13,6 +13,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { timeout } from 'rxjs/operators';
+import { environment } from '../../../environments/environment';
 
 
 @Component({
@@ -167,7 +168,7 @@ export class Checkout implements OnInit {
 
     this.http.get<any>(
 
-      `https://smart-food-ordering-system.onrender.com/api/cart/get-cart.php?user_id=${this.userId}`
+      `${environment.apiUrl}/cart/get-cart.php?user_id=${this.userId}`
 
     )
 
@@ -453,7 +454,7 @@ export class Checkout implements OnInit {
 
     this.http.post<any>(
 
-      'https://smart-food-ordering-system.onrender.com/api/orders/place-order.php',
+      `${environment.apiUrl}/orders/place-order.php`,
 
       orderData
 

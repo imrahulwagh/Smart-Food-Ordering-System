@@ -94,13 +94,16 @@
           class="login-message"
           [class.error-message]="messageType === 'error'"
           [class.success-message]="messageType === 'success'"
+          [class.info-message]="messageType === 'info'"
         >
 
           <i
             [class]="
               messageType === 'success'
                 ? 'bi bi-check-circle'
-                : 'bi bi-exclamation-circle'
+                : messageType === 'info'
+                  ? 'bi bi-info-circle'
+                  : 'bi bi-exclamation-circle'
             "
           ></i>
 

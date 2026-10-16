@@ -5,15 +5,11 @@ import {
 } from '@angular/core';
 
 import { FormsModule } from '@angular/forms';
-
-import {
-  Router,
-  RouterLink,
-  RouterLinkActive
-} from '@angular/router';
-
+import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../../core/services/auth.service';
+import { environment } from '../../../../environments/environment';
 import { AdminSidebar } from '../../../shared/admin-sidebar/admin-sidebar';
 
 @Component({
@@ -22,8 +18,6 @@ import { AdminSidebar } from '../../../shared/admin-sidebar/admin-sidebar';
   imports: [
     CommonModule,
     FormsModule,
-    RouterLink,
-    RouterLinkActive,
     AdminSidebar
   ],
   templateUrl: './categories.html',
@@ -32,17 +26,12 @@ import { AdminSidebar } from '../../../shared/admin-sidebar/admin-sidebar';
 export class Categories implements OnInit {
 
   adminUsername: string = 'Admin';
-  adminEmail: string = 'admin@gmail.com';
-
   categories: any[] = [];
   searchText: string = '';
-
   loading: boolean = true;
   errorMessage: string = '';
-
   showCategoryForm: boolean = false;
   isEditMode: boolean = false;
-
   selectedCategoryId: number | null = null;
 
   categoryForm = {
@@ -53,21 +42,12 @@ export class Categories implements OnInit {
   constructor(
     private router: Router,
     private http: HttpClient,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private auth: AuthService
   ) {}
 
   ngOnInit(): void {
-    const savedUsername = localStorage.getItem('adminUsername');
-    const savedEmail = localStorage.getItem('adminEmail');
-
-    if (savedUsername) {
-      this.adminUsername = savedUsername;
-    }
-
-    if (savedEmail) {
-      this.adminEmail = savedEmail;
-    }
-
+    this.adminUsername = this.auth.getAdminUsername();
     this.getCategories();
   }
 
@@ -76,57 +56,34 @@ export class Categories implements OnInit {
     this.errorMessage = '';
 
     this.http.get<any>(
-      'https://smart-food-ordering-system.onrender.com/api/categories/get-categories.php'
+      `${environment.apiUrl}/categories/get-categories.php`
     ).subscribe({
       next: (res) => {
-        console.log('Categories API response:', res);
-
         this.loading = false;
-
         if (res?.success === true) {
-          this.categories = Array.isArray(res.categories)
-            ? res.categories
-            : [];
+          this.categories = Array.isArray(res.categories) ? res.categories : [];
         } else {
           this.categories = [];
-          this.errorMessage =
-            res?.message || 'Unable to load categories.';
+          this.errorMessage = res?.message || 'Unable to load categories.';
         }
-
         this.cdr.detectChanges();
       },
-
       error: (error) => {
         console.error('Categories API Error:', error);
-
         this.loading = false;
         this.categories = [];
-
-        this.errorMessage =
-          error?.error?.message ||
-          'Unable to connect to categories API.';
-
+        this.errorMessage = 'Unable to connect to categories API. The backend may be starting up — please retry.';
         this.cdr.detectChanges();
       }
     });
   }
 
   get filteredCategories(): any[] {
-    if (!this.searchText.trim()) {
-      return this.categories;
-    }
-
-    const search = this.searchText
-      .toLowerCase()
-      .trim();
-
+    if (!this.searchText.trim()) return this.categories;
+    const search = this.searchText.toLowerCase().trim();
     return this.categories.filter((category) =>
-      String(category.id)
-        .toLowerCase()
-        .includes(search) ||
-      String(category.name || '')
-        .toLowerCase()
-        .includes(search)
+      String(category.id).toLowerCase().includes(search) ||
+      String(category.name || '').toLowerCase().includes(search)
     );
   }
 
@@ -134,19 +91,13 @@ export class Categories implements OnInit {
     this.showCategoryForm = true;
     this.isEditMode = false;
     this.selectedCategoryId = null;
-
-    this.categoryForm = {
-      name: '',
-      image: ''
-    };
+    this.categoryForm = { name: '', image: '' };
   }
 
   openEditForm(category: any): void {
     this.showCategoryForm = true;
     this.isEditMode = true;
-
     this.selectedCategoryId = Number(category.id);
-
     this.categoryForm = {
       name: category.name || '',
       image: category.image || ''
@@ -157,176 +108,87 @@ export class Categories implements OnInit {
     this.showCategoryForm = false;
     this.isEditMode = false;
     this.selectedCategoryId = null;
-
-    this.categoryForm = {
-      name: '',
-      image: ''
-    };
+    this.categoryForm = { name: '', image: '' };
   }
 
   saveCategory(): void {
     const name = this.categoryForm.name.trim();
     const image = this.categoryForm.image.trim();
 
-    if (!name) {
-      alert('Please enter category name.');
-      return;
-    }
-
-    if (!image) {
-      alert('Please enter category image.');
-      return;
-    }
+    if (!name) { alert('Please enter category name.'); return; }
+    if (!image) { alert('Please enter category image URL.'); return; }
 
     if (this.isEditMode) {
-
-      if (!this.selectedCategoryId) {
-        alert('Category ID is missing.');
-        return;
-      }
-
-      const data = {
-        id: this.selectedCategoryId,
-        name: name,
-        image: image
-      };
+      if (!this.selectedCategoryId) { alert('Category ID is missing.'); return; }
 
       this.http.patch<any>(
-        'https://smart-food-ordering-system.onrender.com/api/categories/update-category.php',
-        data
+        `${environment.apiUrl}/categories/update-category.php`,
+        { id: this.selectedCategoryId, name, image }
       ).subscribe({
         next: (res) => {
-          console.log('Update category response:', res);
-
           if (res?.success === true) {
-            alert('Category updated successfully.');
             this.closeCategoryForm();
             this.getCategories();
           } else {
-            alert(
-              res?.message ||
-              'Unable to update category.'
-            );
+            alert(res?.message || 'Unable to update category.');
           }
         },
-
-        error: (error) => {
-          console.error('Update category error:', error);
-
-          alert(
-            error?.error?.message ||
-            'Unable to update category.'
-          );
-        }
+        error: (error) => alert(error?.error?.message || 'Unable to update category.')
       });
-
       return;
     }
 
-    const data = {
-      name: name,
-      image: image
-    };
-
     this.http.post<any>(
-      'https://smart-food-ordering-system.onrender.com/api/categories/add-category.php',
-      data
+      `${environment.apiUrl}/categories/add-category.php`,
+      { name, image }
     ).subscribe({
       next: (res) => {
-        console.log('Add category response:', res);
-
         if (res?.success === true) {
-          alert('Category added successfully.');
           this.closeCategoryForm();
           this.getCategories();
         } else {
-          alert(
-            res?.message ||
-            'Unable to add category.'
-          );
+          alert(res?.message || 'Unable to add category.');
         }
       },
-
-      error: (error) => {
-        console.error('Add category error:', error);
-
-        alert(
-          error?.error?.message ||
-          'Unable to add category.'
-        );
-      }
+      error: (error) => alert(error?.error?.message || 'Unable to add category.')
     });
   }
 
   deleteCategory(category: any): void {
-    if (!category?.id) {
-      return;
-    }
+    if (!category?.id) return;
 
     const confirmDelete = confirm(
-      `Are you sure you want to delete "${category.name}"?`
+      `Are you sure you want to delete "${category.name}"?\nThis action cannot be undone.`
     );
-
-    if (!confirmDelete) {
-      return;
-    }
+    if (!confirmDelete) return;
 
     this.http.delete<any>(
-      'https://smart-food-ordering-system.onrender.com/api/categories/delete-category.php',
-      {
-        body: {
-          id: category.id
-        }
-      }
+      `${environment.apiUrl}/categories/delete-category.php`,
+      { body: { id: category.id } }
     ).subscribe({
       next: (res) => {
-        console.log('Delete category response:', res);
-
         if (res?.success === true) {
-          alert('Category deleted successfully.');
           this.getCategories();
         } else {
-          alert(
-            res?.message ||
-            'Unable to delete category.'
-          );
+          alert(res?.message || 'Unable to delete category.');
         }
       },
-
       error: (error) => {
-        console.error('Delete category error:', error);
-
         if (error?.status === 409) {
           const foodNames = error?.error?.foods || [];
-
           if (foodNames.length > 0) {
-            alert(
-              'Cannot delete this category.\n\n' +
-              'Food using this category:\n' +
-              foodNames.join('\n')
-            );
+            alert('Cannot delete this category.\n\nFood items using this category:\n' + foodNames.join('\n'));
           } else {
-            alert(
-              error?.error?.message ||
-              'This category is being used by food items.'
-            );
+            alert(error?.error?.message || 'This category is being used by food items.');
           }
         } else {
-          alert(
-            error?.error?.message ||
-            'Unable to delete category.'
-          );
+          alert(error?.error?.message || 'Unable to delete category.');
         }
       }
     });
   }
 
   logout(): void {
-    localStorage.removeItem('adminId');
-    localStorage.removeItem('adminUsername');
-    localStorage.removeItem('adminEmail');
-    localStorage.removeItem('adminLoggedIn');
-
-    this.router.navigate(['/admin-login']);
+    this.auth.logoutAdmin();
   }
 }

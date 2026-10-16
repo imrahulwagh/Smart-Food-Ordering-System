@@ -1,3 +1,437 @@
-/* You can add global styles to this file, and also import other style files */
-@import "bootstrap/dist/css/bootstrap.min.css";
-@import "bootstrap-icons/font/bootstrap-icons.css";
+/* =====================================================
+   GLOBAL STYLES — Smart Food Ordering System
+   ===================================================== */
+
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+/* Bootstrap & Icons — loaded via angular.json */
+
+/* =====================================================
+   ROOT DESIGN TOKENS
+   ===================================================== */
+
+:root {
+  /* Brand colors */
+  --primary:       #ff6b35;
+  --primary-dark:  #e85520;
+  --primary-light: #fff0e9;
+  --primary-glow:  rgba(255, 107, 53, 0.15);
+
+  /* Neutrals */
+  --bg:            #f8f9fa;
+  --surface:       #ffffff;
+  --border:        #e8ecef;
+  --border-light:  #f0f2f5;
+  --text:          #1a1a2e;
+  --text-muted:    #6b7280;
+  --text-light:    #9ca3af;
+
+  /* Admin colors */
+  --admin-bg:      #0f1117;
+  --admin-surface: #1a1d27;
+  --admin-border:  #2a2d3a;
+  --admin-accent:  #6366f1;
+
+  /* Status colors */
+  --status-pending:   #fef3c7;
+  --status-confirmed: #dbeafe;
+  --status-preparing: #fde68a;
+  --status-ready:     #d1fae5;
+  --status-out:       #ede9fe;
+  --status-delivered: #d1fae5;
+  --status-cancelled: #fee2e2;
+
+  /* Shadows */
+  --shadow-sm:  0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md:  0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
+  --shadow-lg:  0 20px 40px rgba(0,0,0,0.12), 0 8px 16px rgba(0,0,0,0.06);
+  --shadow-xl:  0 30px 60px rgba(0,0,0,0.15), 0 12px 24px rgba(0,0,0,0.08);
+
+  /* Radii */
+  --radius-sm:  8px;
+  --radius-md:  12px;
+  --radius-lg:  18px;
+  --radius-xl:  24px;
+  --radius-2xl: 32px;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* =====================================================
+   BASE RESET
+   ===================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* =====================================================
+   TYPOGRAPHY
+   ===================================================== */
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--text);
+}
+
+p {
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: color var(--transition);
+}
+
+/* =====================================================
+   PRIMARY BUTTON — Used across all pages
+   ===================================================== */
+
+.btn-food {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 24px;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+  box-shadow: 0 4px 14px rgba(255, 107, 53, 0.35);
+  white-space: nowrap;
+}
+
+.btn-food:hover {
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(255, 107, 53, 0.45);
+  color: #fff;
+}
+
+.btn-food:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
+}
+
+.btn-food:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* =====================================================
+   CART BUTTON
+   ===================================================== */
+
+.cart-btn {
+  position: relative;
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  color: var(--text);
+  padding: 4px 6px;
+  border-radius: var(--radius-sm);
+  transition: color var(--transition), background var(--transition);
+}
+
+.cart-btn:hover {
+  color: var(--primary);
+  background: var(--primary-light);
+}
+
+.cart-count {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  background: var(--primary);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+/* =====================================================
+   SCROLLBAR
+   ===================================================== */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--border-light);
+}
+::-webkit-scrollbar-thumb {
+  background: #c0c0c0;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #a0a0a0;
+}
+
+/* =====================================================
+   STATUS BADGES (reusable across admin pages)
+   ===================================================== */
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: capitalize;
+}
+
+.status-pending {
+  background: var(--status-pending);
+  color: #92400e;
+}
+
+.status-confirmed {
+  background: var(--status-confirmed);
+  color: #1e40af;
+}
+
+.status-preparing {
+  background: var(--status-preparing);
+  color: #78350f;
+}
+
+.status-ready {
+  background: var(--status-ready);
+  color: #065f46;
+}
+
+.status-out {
+  background: var(--status-out);
+  color: #4c1d95;
+}
+
+.status-delivered {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.status-cancelled {
+  background: var(--status-cancelled);
+  color: #991b1b;
+}
+
+/* =====================================================
+   FORM ELEMENTS — Global defaults
+   ===================================================== */
+
+input,
+select,
+textarea {
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--text);
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 3px var(--primary-glow);
+}
+
+/* =====================================================
+   ANIMATIONS
+   ===================================================== */
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
+}
+
+.fade-in {
+  animation: fadeIn 0.4s ease both;
+}
+
+.slide-up {
+  animation: slideUp 0.4s ease both;
+}
+
+/* =====================================================
+   SPINNER
+   ===================================================== */
+
+.spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid var(--border);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto;
+}
+
+.spinner-sm {
+  width: 18px;
+  height: 18px;
+  border-width: 2px;
+}
+
+/* =====================================================
+   ADMIN STATUS SELECT
+   ===================================================== */
+
+.status-select {
+  padding: 5px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  background: #fff;
+}
+
+.status-select.status-pending   { background: var(--status-pending);   color: #92400e; border-color: #fcd34d; }
+.status-select.status-confirmed { background: var(--status-confirmed); color: #1e40af; border-color: #93c5fd; }
+.status-select.status-preparing { background: var(--status-preparing); color: #78350f; border-color: #fbbf24; }
+.status-select.status-ready     { background: var(--status-ready);     color: #065f46; border-color: #6ee7b7; }
+.status-select.status-out       { background: var(--status-out);       color: #4c1d95; border-color: #c4b5fd; }
+.status-select.status-delivered { background: #d1fae5; color: #065f46; border-color: #6ee7b7; }
+.status-select.status-cancelled { background: var(--status-cancelled); color: #991b1b; border-color: #fca5a5; }
+
+/* =====================================================
+   LOADING & EMPTY STATES
+   ===================================================== */
+
+.loading-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  color: var(--text-muted);
+  gap: 16px;
+}
+
+.loading-box p {
+  font-size: 14px;
+}
+
+.empty-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  gap: 12px;
+  text-align: center;
+}
+
+.empty-box .empty-icon {
+  font-size: 48px;
+  color: var(--text-light);
+}
+
+.empty-box h3 {
+  font-size: 20px;
+  color: var(--text);
+}
+
+.empty-box p {
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+/* =====================================================
+   GENERIC ADMIN CARD
+   ===================================================== */
+
+.admin-card {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+/* =====================================================
+   INFO / ERROR MESSAGE BOX
+   ===================================================== */
+
+.info-message-banner {
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.info-message-banner.info {
+  background: #eff6ff;
+  color: #1e40af;
+  border: 1px solid #bfdbfe;
+}
+
+.info-message-banner.error {
+  background: #fff5f5;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+.info-message-banner.success {
+  background: #f0fdf4;
+  color: #065f46;
+  border: 1px solid #bbf7d0;
+}

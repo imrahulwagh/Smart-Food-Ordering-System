@@ -1,20 +1,22 @@
 <aside class="sidebar">
 
+  <!-- LOGO -->
   <div class="sidebar-logo">
-    <h2>Foodie Admin</h2>
+    <h2>🍔 Foodie Admin</h2>
   </div>
 
+  <!-- ADMIN PROFILE -->
   <div class="admin-profile">
     <div class="profile-icon">
-      <i class="bi bi-person-circle"></i>
+      <i class="bi bi-person-fill"></i>
     </div>
-
     <div>
       <h4>{{ adminUsername }}</h4>
       <p>Administrator</p>
     </div>
   </div>
 
+  <!-- NAV MENU -->
   <nav class="sidebar-menu">
 
     <a
@@ -28,7 +30,7 @@
     <a
       routerLink="/admin/orders"
       routerLinkActive="active">
-      <i class="bi bi-cart3"></i>
+      <i class="bi bi-bag-check"></i>
       <span>Orders</span>
     </a>
 
@@ -42,7 +44,7 @@
     <a
       routerLink="/admin/categories"
       routerLinkActive="active">
-      <i class="bi bi-grid"></i>
+      <i class="bi bi-grid-3x3-gap"></i>
       <span>Categories</span>
     </a>
 
@@ -55,6 +57,7 @@
 
   </nav>
 
+  <!-- LOGOUT -->
   <button class="logout-btn" (click)="logout()">
     <i class="bi bi-box-arrow-right"></i>
     <span>Logout</span>
