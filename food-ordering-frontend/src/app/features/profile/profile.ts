@@ -90,8 +90,7 @@ export class Profile implements OnInit {
   ngOnInit(): void {
 
     const userId =
-      localStorage.getItem('userId');
-
+      sessionStorage.getItem('userId');
 
     console.log(
       'Profile User ID:',
@@ -367,7 +366,7 @@ export class Profile implements OnInit {
   saveProfile(): void {
 
     const userId =
-      localStorage.getItem('userId');
+      sessionStorage.getItem('userId');
 
 
     // ===================================================
@@ -658,16 +657,21 @@ export class Profile implements OnInit {
       'Logging out user'
     );
 
+    sessionStorage.removeItem(
+      'userId'
+    );
+
+    sessionStorage.removeItem(
+      'pendingCartItem'
+    );
 
     localStorage.removeItem(
       'userId'
     );
 
-
     localStorage.removeItem(
       'pendingCartItem'
     );
-
 
     this.router.navigate([
       '/login'

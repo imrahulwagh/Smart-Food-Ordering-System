@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 import { timeout } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../../core/services/auth.service';
+import { CartService } from '../../core/services/cart.service';
 
 @Component({
   selector: 'app-cart',
@@ -33,7 +34,8 @@ export class Cart implements OnInit {
   constructor(
     private http: HttpClient,
     private cdr: ChangeDetectorRef,
-    private authService: AuthService
+    private authService: AuthService,
+    private cartService: CartService
   ) {}
 
   ngOnInit(): void {
@@ -69,9 +71,11 @@ export class Cart implements OnInit {
         if (res && res.success) {
           this.cartItems = res.cart || [];
           this.cartTotal = Number(res.cart_total) || 0;
+          this.calculateTotal();
         } else {
           this.cartItems = [];
           this.cartTotal = 0;
+          this.cartService.setCartCount(0);
         }
 
         this.loadingCart = false;
@@ -81,6 +85,7 @@ export class Cart implements OnInit {
         console.error('Cart API Error:', err);
         this.cartItems = [];
         this.cartTotal = 0;
+        this.cartService.setCartCount(0);
         this.loadingCart = false;
         this.cdr.detectChanges();
       }
@@ -126,14 +131,17 @@ export class Cart implements OnInit {
 
   calculateTotal(): void {
     let total = 0;
+    let count = 0;
     this.cartItems.forEach(item => {
       const price = Number(item.price);
-      const quantity = Number(item.quantity);
+      const quantity = Number(item.quantity) || 1;
       item.item_total = price * quantity;
       total += item.item_total;
+      count += quantity;
     });
 
     this.cartTotal = total;
+    this.cartService.setCartCount(count);
     this.cdr.detectChanges();
   }
 

@@ -77,10 +77,10 @@ export class AdminLogin implements OnInit {
         this.message = '';
 
         if (res?.success === true) {
-          localStorage.setItem('adminId', String(res.admin_id));
-          localStorage.setItem('adminUsername', res.username || this.username.trim());
-          localStorage.setItem('adminEmail', res.email || '');
-          localStorage.setItem('adminLoggedIn', 'true');
+          sessionStorage.setItem('adminId', String(res.admin_id));
+          sessionStorage.setItem('adminUsername', res.username || this.username.trim());
+          sessionStorage.setItem('adminEmail', res.email || '');
+          sessionStorage.setItem('adminLoggedIn', 'true');
 
           this.router.navigate(['/admin/dashboard']);
           return;

@@ -6,48 +6,67 @@ import { Router } from '@angular/router';
 })
 export class AuthService {
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) {
+    // Purge legacy persistent keys so opening a new tab/window never auto-authenticates
+    try {
+      localStorage.removeItem('userId');
+      localStorage.removeItem('adminId');
+      localStorage.removeItem('adminUsername');
+      localStorage.removeItem('adminEmail');
+      localStorage.removeItem('adminLoggedIn');
+      localStorage.removeItem('pendingCartItem');
+    } catch (e) {
+      // Storage access blocked or restricted
+    }
+  }
 
   // ==========================================
-  // CUSTOMER AUTH
+  // CUSTOMER AUTH (Session-based)
   // ==========================================
 
   isLoggedIn(): boolean {
-    return !!localStorage.getItem('userId');
+    return !!sessionStorage.getItem('userId');
   }
 
   getUserId(): string | null {
-    return localStorage.getItem('userId');
+    return sessionStorage.getItem('userId');
   }
 
   logoutCustomer(): void {
+    sessionStorage.removeItem('userId');
+    sessionStorage.removeItem('pendingCartItem');
+    sessionStorage.removeItem('cart');
     localStorage.removeItem('userId');
     localStorage.removeItem('pendingCartItem');
     this.router.navigate(['/login']);
   }
 
   // ==========================================
-  // ADMIN AUTH
+  // ADMIN AUTH (Session-based)
   // ==========================================
 
   isAdminLoggedIn(): boolean {
-    return localStorage.getItem('adminLoggedIn') === 'true' &&
-      !!localStorage.getItem('adminId');
+    return sessionStorage.getItem('adminLoggedIn') === 'true' &&
+      !!sessionStorage.getItem('adminId');
   }
 
   getAdminId(): string | null {
-    return localStorage.getItem('adminId');
+    return sessionStorage.getItem('adminId');
   }
 
   getAdminUsername(): string {
-    return localStorage.getItem('adminUsername') || 'Admin';
+    return sessionStorage.getItem('adminUsername') || 'Admin';
   }
 
   getAdminEmail(): string {
-    return localStorage.getItem('adminEmail') || '';
+    return sessionStorage.getItem('adminEmail') || '';
   }
 
   logoutAdmin(): void {
+    sessionStorage.removeItem('adminId');
+    sessionStorage.removeItem('adminUsername');
+    sessionStorage.removeItem('adminEmail');
+    sessionStorage.removeItem('adminLoggedIn');
     localStorage.removeItem('adminId');
     localStorage.removeItem('adminUsername');
     localStorage.removeItem('adminEmail');
@@ -55,3 +74,4 @@ export class AuthService {
     this.router.navigate(['/admin-login']);
   }
 }
+

@@ -67,10 +67,10 @@ export class Login implements OnInit {
         this.loading = false;
 
         if (res && res.success && res.user_id) {
-          localStorage.setItem('userId', res.user_id);
+          sessionStorage.setItem('userId', res.user_id);
 
           // Handle pending cart item added before login
-          const pendingItem = localStorage.getItem('pendingCartItem');
+          const pendingItem = sessionStorage.getItem('pendingCartItem');
 
           if (pendingItem) {
             try {
@@ -89,7 +89,7 @@ export class Login implements OnInit {
               .pipe(timeout(15000))
               .subscribe({
                 next: (cartRes) => {
-                  localStorage.removeItem('pendingCartItem');
+                  sessionStorage.removeItem('pendingCartItem');
                   this.message = cartRes?.success
                     ? 'Login successful! Item added to your cart.'
                     : 'Login successful, but item could not be added to cart.';
@@ -97,14 +97,14 @@ export class Login implements OnInit {
                   setTimeout(() => this.router.navigate(['/cart']), 500);
                 },
                 error: () => {
-                  localStorage.removeItem('pendingCartItem');
+                  sessionStorage.removeItem('pendingCartItem');
                   this.message = 'Login successful, but item could not be added to cart.';
                   this.messageType = 'error';
                   setTimeout(() => this.router.navigate(['/home']), 1000);
                 }
               });
             } catch {
-              localStorage.removeItem('pendingCartItem');
+              sessionStorage.removeItem('pendingCartItem');
               this.message = 'Login successful!';
               this.messageType = 'success';
               setTimeout(() => this.router.navigate(['/home']), 500);

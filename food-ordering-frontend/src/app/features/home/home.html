@@ -146,25 +146,31 @@
         </div>
 
 
-        <!-- LOGIN -->
+        <!-- LOGIN (Only when not logged in) -->
         <button
+          *ngIf="!isLoggedIn()"
           class="btn btn-food"
           routerLink="/login"
           (click)="menuOpen = false">
-
           Login
-
         </button>
 
-
-        <!-- PROFILE -->
+        <!-- PROFILE (Only when logged in) -->
         <button
+          *ngIf="isLoggedIn()"
           class="icon-btn"
           routerLink="/profile"
+          title="My Profile"
           (click)="menuOpen = false">
-
           <i class="bi bi-person"></i>
+        </button>
 
+        <!-- LOGOUT (Only when logged in) -->
+        <button
+          *ngIf="isLoggedIn()"
+          class="btn btn-outline-danger btn-sm"
+          (click)="logoutCustomer(); menuOpen = false">
+          Logout
         </button>
 
 
@@ -203,24 +209,20 @@
 
 
         <!-- SEARCH -->
-
         <div class="search-box">
-
           <i class="bi bi-search"></i>
-
           <input
             type="text"
+            [(ngModel)]="searchQuery"
+            (keyup.enter)="searchMenu()"
             placeholder="Search food or restaurant..."
           />
-
-          <button class="btn btn-food">
+          <button class="btn btn-food" (click)="searchMenu()">
             Search
           </button>
-
         </div>
 
-
-        <button class="btn btn-food hero-button">
+        <button class="btn btn-food hero-button" (click)="goToMenu()">
           Explore Menu
           <i class="bi bi-arrow-right ms-2"></i>
         </button>
@@ -281,6 +283,8 @@
   <div
     class="col-6 col-md-4 col-lg-3"
     *ngFor="let category of categories"
+    (click)="goToCategory(category)"
+    style="cursor: pointer;"
   >
 
     <div class="category-card">
@@ -291,7 +295,7 @@
 
       <h5>{{ category.name }}</h5>
 
-      <p>{{ category.count }} Items</p>
+      <p>{{ category.count || getItemCount(category.id) || 2 }} Items</p>
 
     </div>
 

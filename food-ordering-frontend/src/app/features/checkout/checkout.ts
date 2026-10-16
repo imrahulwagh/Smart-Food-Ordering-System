@@ -121,8 +121,7 @@ export class Checkout implements OnInit {
   ngOnInit(): void {
 
     const savedUserId =
-      localStorage.getItem('userId');
-
+      sessionStorage.getItem('userId');
 
     console.log(
       'Checkout User ID:',

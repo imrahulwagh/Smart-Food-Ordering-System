@@ -7,7 +7,10 @@ import {
 import { HttpClient } from '@angular/common/http';
 import { RouterLink, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { environment } from '../../../environments/environment';
+import { AuthService } from '../../core/services/auth.service';
+import { CartService } from '../../core/services/cart.service';
 
 
 @Component({
@@ -15,7 +18,8 @@ import { environment } from '../../../environments/environment';
   standalone: true,
   imports: [
     RouterLink,
-    CommonModule
+    CommonModule,
+    FormsModule
   ],
   templateUrl: './home.html',
   styleUrl: './home.css'
@@ -24,8 +28,13 @@ import { environment } from '../../../environments/environment';
 export class Home implements OnInit {
 
   // ================= CATEGORIES =================
-  categories: any[] = [];
-  loadingCategories = true;
+  categories: any[] = [
+    { id: 1, name: 'Pizza Special', image: 'pizza', count: 2 },
+    { id: 2, name: 'Burger', image: 'burger', count: 2 },
+    { id: 3, name: 'Biryani', image: 'biryani', count: 2 },
+    { id: 4, name: 'Chinese', image: 'chinese', count: 2 }
+  ];
+  loadingCategories = false;
 
   // ================= FOODS =================
   foods: any[] = [];
@@ -34,6 +43,7 @@ export class Home implements OnInit {
   // ================= UI =================
   cartCount = 0;
   menuOpen = false;
+  searchQuery = '';
 
   // ================= CATEGORY ICONS =================
   categoryIcons: { [key: string]: string } = {
@@ -42,6 +52,7 @@ export class Home implements OnInit {
     biryani: '🍛',
     chinese: '🍜',
     desserts: '🍰',
+    chicken: '🍗',
     pasta: '🍝',
     drinks: '🥤',
     healthy: '🥗',
@@ -56,12 +67,31 @@ export class Home implements OnInit {
   constructor(
     private http: HttpClient,
     private router: Router,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    public auth: AuthService,
+    public cartService: CartService
   ) {}
 
   ngOnInit(): void {
+    this.initCart();
     this.getCategories();
     this.getFoods();
+  }
+
+  // =================================================
+  // CART SYNC
+  // =================================================
+
+  initCart(): void {
+    this.cartService.cartCount$.subscribe(count => {
+      this.cartCount = count;
+      this.cdr.detectChanges();
+    });
+
+    const userId = this.auth.getUserId();
+    if (userId) {
+      this.cartService.fetchCartCount(userId);
+    }
   }
 
   // =================================================
@@ -69,18 +99,17 @@ export class Home implements OnInit {
   // =================================================
 
   getCategories(): void {
-    this.loadingCategories = true;
-
     this.http.get<any>(
       `${environment.apiUrl}/categories/get-categories.php`
     ).subscribe({
       next: (res) => {
-        this.categories = (res?.success && res?.categories) ? res.categories : [];
+        if (res?.success && Array.isArray(res?.categories) && res.categories.length > 0) {
+          this.categories = res.categories;
+        }
         this.loadingCategories = false;
         this.cdr.detectChanges();
       },
       error: () => {
-        this.categories = [];
         this.loadingCategories = false;
         this.cdr.detectChanges();
       }
@@ -132,10 +161,10 @@ export class Home implements OnInit {
   // =================================================
 
   addToCart(food: any): void {
-    const userId = localStorage.getItem('userId');
+    const userId = this.auth.getUserId();
 
     if (!userId) {
-      localStorage.setItem('pendingCartItem', JSON.stringify(food));
+      sessionStorage.setItem('pendingCartItem', JSON.stringify(food));
       this.router.navigate(['/login']);
       return;
     }
@@ -153,6 +182,7 @@ export class Home implements OnInit {
     ).subscribe({
       next: (res) => {
         if (res && res.success) {
+          this.cartService.fetchCartCount(userId);
           this.router.navigate(['/cart']);
         } else {
           console.error('Could not add to cart:', res);
@@ -165,11 +195,31 @@ export class Home implements OnInit {
   }
 
   // =================================================
-  // UI HELPERS
+  // UI HELPERS & NAVIGATION
   // =================================================
 
+  searchMenu(): void {
+    if (this.searchQuery && this.searchQuery.trim()) {
+      this.router.navigate(['/menu'], {
+        queryParams: { q: this.searchQuery.trim() }
+      });
+    } else {
+      this.router.navigate(['/menu']);
+    }
+  }
+
+  goToCategory(category: any): void {
+    if (category?.name) {
+      this.router.navigate(['/menu'], {
+        queryParams: { category: category.name }
+      });
+    } else {
+      this.router.navigate(['/menu']);
+    }
+  }
+
   toggleSearch(): void {
-    console.log('Search clicked');
+    this.goToMenu();
   }
 
   toggleMenu(): void {
@@ -177,7 +227,12 @@ export class Home implements OnInit {
   }
 
   isLoggedIn(): boolean {
-    return !!localStorage.getItem('userId');
+    return this.auth.isLoggedIn();
+  }
+
+  logoutCustomer(): void {
+    this.auth.logoutCustomer();
+    this.cartCount = 0;
   }
 
   goToMenu(): void {

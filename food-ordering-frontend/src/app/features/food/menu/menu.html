@@ -3,31 +3,48 @@
 <header class="menu-header">
 
   <div class="logo">
-    🍔 <span>Foodie</span>
+    🍔 <span routerLink="/home" style="cursor: pointer;">Foodie</span>
   </div>
 
   <nav>
     <a routerLink="/home">Home</a>
-    <a class="active">Menu</a>
-    <a href="#">Orders</a>
+    <a class="active" routerLink="/menu">Menu</a>
+    <a routerLink="/orders">Orders</a>
   </nav>
 
   <div class="header-actions">
 
-    <button class="icon-btn" type="button">
-      <i class="bi bi-search"></i>
-    </button>
-
-    <button class="cart-btn" type="button">
+    <button class="cart-btn" routerLink="/cart" type="button">
       <i class="bi bi-cart3"></i>
-      <span>Cart</span>
+      <span>Cart ({{ cartCount }})</span>
     </button>
 
+    <!-- LOGIN (Only when not logged in) -->
     <button
+      *ngIf="!isLoggedIn()"
       class="login-btn"
       routerLink="/login"
       type="button">
       Login
+    </button>
+
+    <!-- PROFILE (Only when logged in) -->
+    <button
+      *ngIf="isLoggedIn()"
+      class="icon-btn"
+      routerLink="/profile"
+      title="My Profile"
+      type="button">
+      <i class="bi bi-person"></i>
+    </button>
+
+    <!-- LOGOUT (Only when logged in) -->
+    <button
+      *ngIf="isLoggedIn()"
+      class="btn btn-outline-danger btn-sm"
+      (click)="logout()"
+      type="button">
+      Logout
     </button>
 
   </div>
@@ -103,47 +120,32 @@
 
   <div class="category-list">
 
-    <!-- ALL -->
+    <!-- ALL (No emoji, clean pill) -->
 
     <button
       class="category-btn"
       [class.selected]="selectedCategory === null"
       (click)="selectCategory(null)"
       type="button">
-
-      <span>🍽️</span>
-
       All
-
     </button>
 
 
-    <!-- LOADING -->
-
-    @if (loadingCategories) {
-
-      <span class="loading-text">
-        Loading categories...
-      </span>
-
-    }
-
-
-    <!-- DATABASE CATEGORIES -->
+    <!-- DATABASE & DEFAULT CATEGORIES (Instant render) -->
 
     @for (
       category of categories;
-      track category.id
+      track category.id || category.name
     ) {
 
       <button
         class="category-btn"
-        [class.selected]="selectedCategory === category"
+        [class.selected]="selectedCategory?.id === category.id || selectedCategory?.name === category.name"
         (click)="selectCategory(category)"
         type="button">
 
         <span>
-          {{ getCategoryIcon(category.image) }}
+          {{ getCategoryIcon(category.image || category.name) }}
         </span>
 
         {{ category.name }}
@@ -178,7 +180,7 @@
     </div>
 
     <span class="food-count">
-      {{ getFoodCount() }} items
+      {{ loadingFoods ? 'Loading...' : getFoodCount() + ' items' }}
     </span>
 
   </div>
