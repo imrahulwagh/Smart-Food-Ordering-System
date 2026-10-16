@@ -39,6 +39,26 @@ export class Categories implements OnInit {
     image: ''
   };
 
+  categoryIcons: { [key: string]: string } = {
+    pizza: '🍕',
+    burger: '🍔',
+    biryani: '🍛',
+    chinese: '🍜',
+    desserts: '🍰',
+    chicken: '🍗',
+    drinks: '🥤',
+    beverages: '🥤',
+    healthy: '🥗',
+    sandwich: '🥪',
+    pasta: '🍝',
+    coffee: '☕'
+  };
+
+  getIcon(key: string): string {
+    if (!key) return '🍽️';
+    return this.categoryIcons[key.toLowerCase().trim()] || '🍽️';
+  }
+
   constructor(
     private router: Router,
     private http: HttpClient,

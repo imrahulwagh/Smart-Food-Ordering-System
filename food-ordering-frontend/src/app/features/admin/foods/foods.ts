@@ -27,6 +27,7 @@ export class Foods implements OnInit {
 
   adminUsername: string = 'Admin';
   foods: any[] = [];
+  categories: any[] = [];
   loading: boolean = true;
   errorMessage: string = '';
   searchText: string = '';
@@ -53,7 +54,25 @@ export class Foods implements OnInit {
 
   ngOnInit(): void {
     this.adminUsername = this.auth.getAdminUsername();
+    this.getCategories();
     this.getFoods();
+  }
+
+  getCategories(): void {
+    this.http.get<any>(`${environment.apiUrl}/categories/get-categories.php`).subscribe({
+      next: (res) => {
+        if (res?.success && Array.isArray(res.categories)) {
+          this.categories = res.categories;
+        }
+      },
+      error: () => {}
+    });
+  }
+
+  getCategoryName(catId: any): string {
+    if (!catId) return '—';
+    const found = this.categories.find(c => Number(c.id) === Number(catId));
+    return found ? found.name : `ID #${catId}`;
   }
 
   // ==========================================

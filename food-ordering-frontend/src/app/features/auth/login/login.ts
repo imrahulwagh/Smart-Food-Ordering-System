@@ -60,7 +60,7 @@ export class Login implements OnInit {
       `${environment.apiUrl}/auth/login.php`,
       { email: this.email.trim(), password: this.password }
     )
-    .pipe(timeout(90000))
+    .pipe(timeout(12000))
     .subscribe({
 
       next: (res) => {
@@ -86,7 +86,7 @@ export class Login implements OnInit {
                 `${environment.apiUrl}/cart/add-cart.php`,
                 cartData
               )
-              .pipe(timeout(15000))
+              .pipe(timeout(10000))
               .subscribe({
                 next: (cartRes) => {
                   sessionStorage.removeItem('pendingCartItem');
@@ -125,9 +125,9 @@ export class Login implements OnInit {
         console.error('Login API Error:', err);
 
         if (err?.name === 'TimeoutError') {
-          this.message = 'Server is taking too long. First request may take 30–60s. Please try again.';
+          this.message = 'Authentication timed out. The server took too long to respond.';
         } else {
-          this.message = 'Invalid email or password. Please check your details.';
+          this.message = err?.error?.message || err?.error?.error_description || 'Invalid email or password. User not found.';
         }
         this.messageType = 'error';
       }

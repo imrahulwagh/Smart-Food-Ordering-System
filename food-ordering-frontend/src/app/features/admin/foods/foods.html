@@ -32,14 +32,24 @@
 
       <div class="form-grid">
 
-        <!-- CATEGORY ID -->
+        <!-- CATEGORY SELECT -->
         <div class="form-field">
-          <label for="food-category-id">Category ID *</label>
-          <input
+          <label for="food-category-id">Category *</label>
+          <select
             id="food-category-id"
+            [(ngModel)]="foodForm.category_id"
+            *ngIf="categories.length > 0">
+            <option value="" disabled>-- Select a Category --</option>
+            <option *ngFor="let cat of categories" [value]="cat.id">
+              {{ cat.name }} (ID #{{ cat.id }})
+            </option>
+          </select>
+          <input
+            *ngIf="categories.length === 0"
+            id="food-category-id-manual"
             type="number"
             [(ngModel)]="foodForm.category_id"
-            placeholder="Enter category ID"
+            placeholder="Enter category ID (e.g. 1)"
             min="1">
         </div>
 
@@ -75,14 +85,21 @@
             min="0">
         </div>
 
-        <!-- IMAGE -->
+        <!-- IMAGE (Accepts Google / web image link) -->
         <div class="form-field">
-          <label for="food-image">Image URL</label>
+          <label for="food-image">Image URL / Google Image Link</label>
           <input
             id="food-image"
             type="text"
             [(ngModel)]="foodForm.image"
-            placeholder="Paste image URL">
+            placeholder="Paste image link from Google or web (https://...)">
+          <div *ngIf="foodForm.image" class="mt-2 p-1" style="border: 1px dashed #ddd; border-radius: 8px; display: inline-block;">
+            <img
+              [src]="foodForm.image"
+              alt="Preview"
+              style="height: 60px; max-width: 120px; object-fit: cover; border-radius: 6px; display: block;"
+              (error)="foodForm.image = ''">
+          </div>
         </div>
 
         <!-- STATUS -->
@@ -149,7 +166,7 @@
               <th>Food</th>
               <th>Description</th>
               <th>Price</th>
-              <th>Category ID</th>
+              <th>Category</th>
               <th>Status</th>
               <th>Actions</th>
             </tr>
@@ -180,7 +197,7 @@
               <td><strong class="price-text">{{ formatCurrency(food.price) }}</strong></td>
 
               <!-- CATEGORY -->
-              <td>{{ food.category_id || '—' }}</td>
+              <td>{{ getCategoryName(food.category_id) }}</td>
 
               <!-- STATUS -->
               <td>

@@ -69,7 +69,7 @@ export class AdminLogin implements OnInit {
       `${environment.apiUrl}/auth/admin-login.php`,
       { username: this.username.trim(), password: this.password }
     )
-    .pipe(timeout(90000))
+    .pipe(timeout(12000))
     .subscribe({
 
       next: (res) => {
@@ -95,11 +95,11 @@ export class AdminLogin implements OnInit {
         console.error('Admin login error:', error);
 
         if (error?.name === 'TimeoutError') {
-          this.message = 'Server is taking too long to respond. Please wait 1–2 minutes and try again (Render free tier cold start).';
+          this.message = 'Authentication timed out. Please check your credentials or retry.';
         } else if (error?.status === 0) {
-          this.message = 'Cannot reach the server. Check your internet connection or try again shortly.';
+          this.message = 'Cannot reach the server. Please check your connection.';
         } else {
-          this.message = error?.error?.message || 'Unable to connect to admin login API.';
+          this.message = error?.error?.message || 'Invalid admin username or password.';
         }
 
         this.messageType = 'error';

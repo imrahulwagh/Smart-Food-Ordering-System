@@ -70,8 +70,8 @@ curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_POST, true);
 curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
 curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
-curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+curl_setopt($ch, CURLOPT_TIMEOUT, 10);
 
 $response = curl_exec($ch);
 
@@ -83,7 +83,7 @@ if ($response === false) {
 
     echo json_encode([
         "success" => false,
-        "message" => "Supabase connection error",
+        "message" => "Supabase connection error: " . $error,
         "details" => $error
     ]);
     exit;
@@ -96,11 +96,11 @@ curl_close($ch);
 $result = json_decode($response, true);
 
 if ($httpCode < 200 || $httpCode >= 300) {
-    http_response_code($httpCode);
+    http_response_code(401);
 
     echo json_encode([
         "success" => false,
-        "message" => $result['msg'] ?? $result['message'] ?? "Invalid email or password",
+        "message" => $result['error_description'] ?? $result['msg'] ?? $result['message'] ?? "Invalid email or password",
         "details" => $result
     ]);
     exit;
