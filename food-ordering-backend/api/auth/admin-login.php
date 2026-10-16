@@ -20,6 +20,7 @@ $password = $data["password"] ?? "";
 
 // Check empty fields
 if ($username === "" || $password === "") {
+    http_response_code(400);
     echo json_encode([
         "success" => false,
         "message" => "Username and password are required."
@@ -34,6 +35,8 @@ $url = $supabaseUrl . "/rest/v1/admin?username=eq." . urlencode($username) . "&s
 $ch = curl_init($url);
 
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 4);
+curl_setopt($ch, CURLOPT_TIMEOUT, 7);
 
 curl_setopt($ch, CURLOPT_HTTPHEADER, [
     "apikey: " . $supabaseSecretKey,
@@ -46,12 +49,13 @@ $response = curl_exec($ch);
 
 // CURL error
 if ($response === false) {
+    $curlErr = curl_error($ch);
+    curl_close($ch);
+    http_response_code(504);
     echo json_encode([
         "success" => false,
-        "message" => "Unable to connect to Supabase."
+        "message" => "Authentication timed out. Unable to connect to Supabase."
     ]);
-
-    curl_close($ch);
     exit;
 }
 

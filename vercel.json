@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "buildCommand": "cd food-ordering-frontend && npm run build",
+  "outputDirectory": "food-ordering-frontend/dist/food-ordering-frontend/browser",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}

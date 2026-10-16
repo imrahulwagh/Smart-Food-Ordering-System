@@ -62,14 +62,14 @@ export class AdminLogin implements OnInit {
     if (this.loading) return;
 
     this.loading = true;
-    this.message = 'Connecting to server... (first request may take 30–60s if server is sleeping)';
+    this.message = 'Authenticating...';
     this.messageType = 'info';
 
     this.http.post<any>(
       `${environment.apiUrl}/auth/admin-login.php`,
       { username: this.username.trim(), password: this.password }
     )
-    .pipe(timeout(12000))
+    .pipe(timeout(8000))
     .subscribe({
 
       next: (res) => {

@@ -42,8 +42,16 @@ export class Login implements OnInit {
   login(): void {
     this.message = '';
 
-    if (!this.email.trim()) {
+    const cleanEmail = this.email.trim();
+    if (!cleanEmail) {
       this.message = 'Please enter your email address.';
+      this.messageType = 'error';
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(cleanEmail)) {
+      this.message = 'Please enter a valid email address.';
       this.messageType = 'error';
       return;
     }
@@ -58,9 +66,9 @@ export class Login implements OnInit {
 
     this.http.post<any>(
       `${environment.apiUrl}/auth/login.php`,
-      { email: this.email.trim(), password: this.password }
+      { email: cleanEmail, password: this.password }
     )
-    .pipe(timeout(12000))
+    .pipe(timeout(8000))
     .subscribe({
 
       next: (res) => {

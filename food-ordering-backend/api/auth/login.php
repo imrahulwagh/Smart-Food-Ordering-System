@@ -70,8 +70,8 @@ curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_POST, true);
 curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
 curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
-curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 4);
+curl_setopt($ch, CURLOPT_TIMEOUT, 7);
 
 $response = curl_exec($ch);
 
@@ -79,11 +79,11 @@ if ($response === false) {
     $error = curl_error($ch);
     curl_close($ch);
 
-    http_response_code(500);
+    http_response_code(504);
 
     echo json_encode([
         "success" => false,
-        "message" => "Supabase connection error: " . $error,
+        "message" => "Authentication timed out. Unable to connect to authentication server.",
         "details" => $error
     ]);
     exit;
