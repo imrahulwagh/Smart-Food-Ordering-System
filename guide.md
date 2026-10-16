@@ -380,22 +380,38 @@ bc7b9f7  refactor(admin): replace all duplicate inline sidebars with
 - Admin orders page: customer avatars, payment badges, status badges in correct colours ✓
 - Sidebar: dark gradient, active page highlighted in indigo, all routes work via routerLink ✓
 
-### Known issues / next actions
+---
 
-- Orders status update dropdown shows "Pending" in default render until
-  fixed with `ngModel` (fixed in this session, not yet screenshot verified).
-- Admin password stored as plain-text in Supabase `admin` table — consider
-  migrating to bcrypt in backend `admin-login.php` as a security hardening step.
-- No server-side admin authentication token on API requests — admin
-  endpoints currently accept requests without a session token header.
-- Customer-facing pages (home, menu, cart, checkout, orders) have not
-  been visually audited in this session — schedule for next session.
-- Push to GitHub + Vercel redeploy not yet done — run `git push origin main`
-  to trigger Vercel auto-deploy.
+## 13. Customer Frontend & Session Security Hardening (Current Session)
 
-### Exact next action
+### Changes Made
 
-1.  Run `git push origin main` to trigger Vercel redeploy.
-2.  Audit customer-facing pages (home, menu, cart, checkout, my orders).
-3.  Consider bcrypt password hashing in `admin-login.php`.
-4.  Add admin token header to all admin API requests for server-side auth.
+1. **Session Isolation Across Tabs & Windows (Security Fix):**
+   - Migrated all authentication persistence from `localStorage` to `sessionStorage` in `AuthService`, `Login`, `AdminLogin`, `Profile`, `Checkout`, `Menu`, and `Home`.
+   - In `AuthService` constructor, actively purges legacy persistent keys (`userId`, `adminLoggedIn`, `adminId`, etc.) from `localStorage`.
+   - Now, opening the application in a new tab or window does not auto-login to an existing account, requiring a fresh login per tab as desired while maintaining the session within the active tab.
+
+2. **Instant Menu Categories & Foods Render (Zero Waiting Time):**
+   - Initialized default category cards (`Pizza Special`, `Burger`, `Biryani`, `Chinese`, `Desserts`, `Chicken`) and popular foods immediately so the page looks complete (matching Image 3) from the very first frame.
+   - Removed the blocking `Loading categories...` text and the `🍽️` emoji inside the `All` button.
+   - Fixed category icon mappings (including `🍗` for chicken).
+   - Once backend APIs respond, data is smoothly updated without layout jumps.
+
+3. **Hero Search & "Explore Menu" Button Functionality:**
+   - Bound the hero search `<input>` to `searchQuery` with `(keyup.enter)` and Search button click.
+   - Clicking Search or pressing Enter navigates to `/menu?q=<search>`.
+   - Clicking "Explore Menu" navigates to `/menu`.
+   - Clicking category cards on the home page navigates to `/menu?category=<name>`.
+   - `Menu` component reads query parameters (`q` and `category`) to pre-filter items on load.
+
+4. **Navbar Login/Logout Button Visibility:**
+   - On the Home page navbar and Menu header:
+     - When unauthenticated: Displays the **Login** button.
+     - When authenticated: Automatically hides **Login** and displays **Profile** icon and **Logout** button.
+
+5. **Live Reactive Cart Count Badge:**
+   - Updated `CartService` with a reactive `cartCount$` `BehaviorSubject` and `fetchCartCount(userId)`.
+   - Home and Menu components subscribe to `cartCount$`.
+   - Adding items to cart immediately updates the badge on the dashboard.
+   - `Cart` page operations (quantity adjustments, item deletions) keep the count synchronized.
+
