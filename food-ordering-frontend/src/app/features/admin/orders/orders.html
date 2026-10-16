@@ -105,8 +105,8 @@
               <td>
                 <select
                   class="status-select-inline"
-                  [value]="order.status || order.order_status || 'Pending'"
-                  (change)="updateStatus(order, $any($event.target).value)">
+                  [ngModel]="order.status || order.order_status || 'Pending'"
+                  (ngModelChange)="updateStatus(order, $event)">
                   <option *ngFor="let s of statusList" [value]="s">{{ s }}</option>
                 </select>
               </td>

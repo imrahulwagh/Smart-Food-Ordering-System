@@ -307,3 +307,95 @@ results** - **Tests/build status** - **Git commit hash and push
 status** - **Known issues** - **Exact next action**
 
 Do not mark tasks complete unless the result has been verified.
+
+---
+
+## 12. Session handoff — 2026-10-16
+
+### What was completed
+
+**Admin architecture refactor — shared AdminSidebar component**
+
+All five admin feature pages previously duplicated the full sidebar HTML
+inline. This caused maintenance burden and inconsistent styling across
+pages. The work done this session:
+
+1.  **Upgraded `AdminSidebar` component** (`admin-sidebar.html`,
+    `admin-sidebar.css`) — modern dark gradient sidebar with Bootstrap
+    Icons, active page highlight in indigo/purple gradient, admin
+    profile section, logout button with hover danger style.
+
+2.  **Refactored all 5 admin templates** to use `<app-admin-sidebar>`
+    instead of inline sidebar HTML:
+    - `foods.html` — new layout + table with thumbnails, availability badges
+    - `categories.html` — new layout + image key badges, food count badges
+    - `orders.html` — customer avatars, payment badge, `ngModel` status select
+    - `users.html` — user photo/avatar display, edit form panel
+    - `order-details.html` — meta-grid layout, items table with tfoot total
+
+3.  **Updated all 5 admin component TS files** to import `AdminSidebar`
+    and removed now-unused `RouterLink` / `RouterLinkActive` imports.
+
+4.  **Rewrote all 5 admin page CSS files** with a consistent layout
+    pattern: `admin-layout` flex container, 250 px sidebar offset via
+    `margin-left: 250px` on `.admin-main`, unified button/form/table/
+    state-box styles across all pages.
+
+5.  **Revamped dashboard CSS** — stat cards with colored icon boxes
+    (blue orders, green revenue, yellow pending, orange preparing,
+    purple delivered), proper topbar with admin avatar, status badge
+    palette, responsive breakpoints.
+
+6.  **Fixed `angular.json`** — added missing `fileReplacements` entry
+    for production build so `environment.prod.ts` correctly replaces
+    `environment.ts` in production bundles.
+
+7.  **Fixed `orders.html` status dropdown** — changed `[value]` +
+    `(change)` to `[ngModel]` + `(ngModelChange)` so the dropdown
+    correctly reflects the current order status rather than defaulting
+    to "Pending" for all rows.
+
+### Build status
+
+```
+npm run build -- --configuration=production
+Exit code: 0
+Zero NG8113 warnings, zero errors
+Bundle: 110 kB initial (gzipped), all lazy chunks < 16 kB
+```
+
+### Git commit
+
+```
+bc7b9f7  refactor(admin): replace all duplicate inline sidebars with
+         shared AdminSidebar component
+40 files changed, 3213 insertions(+), 7230 deletions(-)
+```
+
+### Visual verification (localhost:4200)
+
+- Admin login page: polished split-panel (dark left, white right), cold-start info alert ✓
+- Admin dashboard: live data — 31 orders, ₹13,680 revenue, stat cards with icons ✓
+- Admin foods page: thumbnails, truncated descriptions, availability badges, icon action buttons ✓
+- Admin orders page: customer avatars, payment badges, status badges in correct colours ✓
+- Sidebar: dark gradient, active page highlighted in indigo, all routes work via routerLink ✓
+
+### Known issues / next actions
+
+- Orders status update dropdown shows "Pending" in default render until
+  fixed with `ngModel` (fixed in this session, not yet screenshot verified).
+- Admin password stored as plain-text in Supabase `admin` table — consider
+  migrating to bcrypt in backend `admin-login.php` as a security hardening step.
+- No server-side admin authentication token on API requests — admin
+  endpoints currently accept requests without a session token header.
+- Customer-facing pages (home, menu, cart, checkout, orders) have not
+  been visually audited in this session — schedule for next session.
+- Push to GitHub + Vercel redeploy not yet done — run `git push origin main`
+  to trigger Vercel auto-deploy.
+
+### Exact next action
+
+1.  Run `git push origin main` to trigger Vercel redeploy.
+2.  Audit customer-facing pages (home, menu, cart, checkout, my orders).
+3.  Consider bcrypt password hashing in `admin-login.php`.
+4.  Add admin token header to all admin API requests for server-side auth.
